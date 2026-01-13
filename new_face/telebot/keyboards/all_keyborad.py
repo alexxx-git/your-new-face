@@ -40,3 +40,12 @@ def create_rat():
     builder.adjust(4, 4, 2, 1)
     return builder.as_markup(resize_keyboard=True)
 
+def create_foto():
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="📷 Сделать фото")]
+        ],
+        resize_keyboard=True
+    )
+
+

@@ -2,13 +2,13 @@ import asyncio
 from aiogram import Router, F
 from aiogram.filters import  CommandStart, Command, CommandObject
 from aiogram.types import Message
-from keyboards.all_keyborad import main_kb, create_spec_kb,create_rat
+from keyboards.all_keyborad import main_kb, create_spec_kb,create_rat, create_foto
 from keyboards.inline_kbs import ease_link_kb, get_inline_kb, create_qst_inline_kb
 from utils.utils import get_random_person
 from aiogram.types import CallbackQuery
-from create_bot import questions, bot
+from create_bot import questions, bot, admins
 from aiogram.utils.chat_action import ChatActionSender
-
+from filters.is_admin import IsAdmin
 start_router = Router()
 
 @start_router.message(CommandStart())
@@ -55,6 +55,8 @@ async def send_random_person(call: CallbackQuery):
     )
     await call.message.answer(formatted_message)
 
+
+
 @start_router.callback_query(F.data == 'back_home')
 async def back_home(call: CallbackQuery):
     await call.message.delete_reply_markup()
@@ -77,3 +79,23 @@ async def cmd_start(call: CallbackQuery):
         await asyncio.sleep(1)
         await call.message.delete_reply_markup()
         await call.message.answer(msg_text, reply_markup=create_qst_inline_kb(questions))
+
+
+
+@start_router.message(F.text.lower().contains('qq'), IsAdmin(admins))
+async def process_find_word(message: Message):
+    await message.answer('О, админ, здарова! А тебе можно писать подписывайся.')
+
+
+@start_router.message(Command("www"))
+async def start_command(message: Message):
+
+    await message.answer(
+        "Пожалуйста, сфотографируйте объект и отправьте фото в этот чат.",
+        reply_markup=create_foto()
+    )
+
+# Хендлер, который ловит отправленное фото
+@start_router.message(F.photo)
+async def handle_photo(message: Message):
+    await message.answer("Спасибо! Фото получено.")
