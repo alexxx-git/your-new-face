@@ -11,7 +11,10 @@ from dotenv import load_dotenv
 
 dotenv_path = Path(__file__).parent.parent.parent / ".env"
 load_dotenv(dotenv_path)
+
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+# tyt nado prorabotat moget smenit na drugue bbilioteku
+admins=[int(os.getenv("ADMINS"))]
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
