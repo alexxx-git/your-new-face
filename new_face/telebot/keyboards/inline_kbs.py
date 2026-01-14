@@ -36,3 +36,21 @@ def create_qst_inline_kb(questions: dict) -> InlineKeyboardMarkup:
 
     builder.adjust(1)
     return builder.as_markup()
+
+def create_age_keyboard(age:int = 20) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+            inline_keyboard=[
+                        [
+                            InlineKeyboardButton(
+                                text=f"Возраст: {age}",
+                                callback_data="noop"
+                            )
+                        ],
+                        [
+                            InlineKeyboardButton(text="<< -10", callback_data="age:-10"),
+                            InlineKeyboardButton(text="< -5", callback_data="age:-5"),
+                            InlineKeyboardButton(text="+5 >", callback_data="age:+5"),
+                            InlineKeyboardButton(text="+10 >>", callback_data="age:+10"),
+                        ],
+                    ]
+                )
