@@ -9,5 +9,7 @@ dependencies = [
     "faker>=40.1.0",
     "pre-commit>=4.5.1",
     "python-dotenv>=1.2.1",
+    "redis>=7.1.0",
+    "rq>=2.6.1",
     "ruff>=0.14.11",
 ]
