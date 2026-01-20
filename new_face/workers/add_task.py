@@ -1,11 +1,11 @@
 from rq import Queue
 from redis import Redis
-from test_task import mytask
+# from test_task import mytask
 from new_face.workers.add_job import count_words_at_url
 import time
 # Подключение
 redis_conn = Redis(host='127.0.0.1', port=6379)
-q = Queue('first_1111', connection=redis_conn)
+q = Queue('first', connection=redis_conn)
 
 # # Добавить задачу
 # # job = q.enqueue("test", "ПРИВЕТ МИР")
