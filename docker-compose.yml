@@ -5,3 +5,19 @@ services:
     ports:
       - "6379:6379"
     restart: unless-stopped
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+    - "${RABBITMQ_PORT}:${RABBITMQ_PORT}"
+    - "${RABBITMQ_MANAGEMENT_PORT}:${RABBITMQ_MANAGEMENT_PORT}"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+  celery_worker:
+    #build: .
+    # tyt nado sobrat docker obraz
+    command: celery -A new_face.celery_app.app worker --loglevel=info
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
