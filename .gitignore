@@ -20,3 +20,4 @@ test.py
 #DATA
 data/face_dataset/
 .env
+new_face/models/
