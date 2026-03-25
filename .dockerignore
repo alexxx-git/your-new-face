@@ -1,0 +1,8 @@
+new_face/models/
+new_face/__pycache__/
+
+__pycache__/
+
+.venv/
+Dockerfile
+.dockerignore
