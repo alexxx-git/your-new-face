@@ -1,0 +1,9 @@
+from new_face.celery_app import app
+import time
+@app.task
+def test_task(data):
+    print(f"start: {data}")
+    time.sleep(2)  # workings
+    result = f"finish: {data}"
+    print(result)
+    return result
