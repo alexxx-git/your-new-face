@@ -21,3 +21,6 @@ test.py
 data/face_dataset/
 .env
 new_face/models/
+new_face/output/
+output/
+new_face/whl/

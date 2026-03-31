@@ -3,19 +3,24 @@ name = "your-new-face"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = "==3.11.*"
+requires-python = ">=3.13"
 dependencies = [
+    "accelerate>=1.13.0",
+    "deepface>=0.0.99",
+    "diffusers>=0.37.1",
+    "pathlib>=1.0.1",
     "pre-commit>=4.5.1",
     "python-dotenv>=1.2.1",
     "ruff>=0.14.11",
-    "torch>=2.0.0",
-    "opencv-python>=4.8.0",
-    "mediapipe>=0.10.0",
-    "numpy<2",
-    "pillow>=10.0.0",
-    "onnxruntime-gpu>=1.24.4",
-    "insightface",
+    "tensorflow>=2.21.0",
+    "tf-keras>=2.21.0",
+    "torch>=2.9.1",
+    "torchvision==0.24.1", #not work without this. says hash mismathes
+    "transformers>=5.4.0",
 ]
+
+
+
 
 [dependency-groups]
 # Для разработки и тестирования
@@ -24,51 +29,25 @@ dev = [
     "pytest-cov>=4.1.0",
     "black>=23.0.0",
     "ruff>=0.1.0",
-    "mypy>=1.5.0", 
+    "mypy>=1.5.0",                    
 ]
-
-# Для запуска API (FastAPI)
-api = [
-    "fastapi>=0.104.0",
-    "uvicorn>=0.24.0",
-    "python-multipart>=0.0.6",
-    "pydantic>=2.0.0",
-]
-
-# Для ML с GPU (NVIDIA CUDA)
-ml-gpu = [
-    "torch>=2.0.0",
-    "torchvision>=0.15.0",
-    "torchaudio>=2.0.0",
-    "onnxruntime-gpu>=1.16.0",
-    "gfpgan>=1.3.8",
-    "realesrgan>=0.3.0",
-]
-
-# Для ML с CPU (без CUDA)
-ml-cpu = [
-    "torch>=2.0.0",
-    "torchvision>=0.15.0",
-    "torchaudio>=2.0.0",
-    "onnxruntime>=1.16.0",
-    "gfpgan>=1.3.8",
-    "realesrgan>=0.3.0",
-]
-
-# Для развёртывания (Docker, production)
-deploy = [
-    "gunicorn>=21.0.0",
-    "redis>=5.0.0",
-    "celery>=5.3.0",
-    "boto3>=1.28.0",
-]
-
-# Для мониторинга и логирования
-monitoring = [
-    "prometheus-client>=0.19.0",
-    "structlog>=23.0.0",
-    "sentry-sdk>=1.30.0",
-]
-
 [tool.uv.sources]
-insightface = { path = "new_face/whl/insightface-0.7.3-cp311-cp311-win_amd64.whl" }
+torch = [
+  { index = "pytorch-cu130",marker = "sys_platform == 'win32' or sys_platform == 'linux'" },
+]
+torchvision = [
+  { index = "pytorch-cu130", marker = "sys_platform == 'win32' or sys_platform == 'linux'" },
+]
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
