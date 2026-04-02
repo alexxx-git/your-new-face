@@ -3,13 +3,13 @@ from aiogram import Bot
 from aiogram import Router, F
 from aiogram.filters import  CommandStart, Command, CommandObject
 from aiogram.types import Message
-from keyboards.all_keyborad import main_kb, create_spec_kb,create_rat, create_foto
-from keyboards.inline_kbs import ease_link_kb, get_inline_kb, create_qst_inline_kb, create_age_keyboard
-from utils.utils import get_random_person
+from telebot.keyboards.all_keyborad import main_kb, create_spec_kb,create_rat, create_foto
+from telebot.keyboards.inline_kbs import ease_link_kb, get_inline_kb, create_qst_inline_kb, create_age_keyboard
+from telebot.utils.utils import get_random_person
 from aiogram.types import CallbackQuery
-from create_bot import bot, admins
+from telebot.create_bot import bot, admins
 from aiogram.utils.chat_action import ChatActionSender
-from filters.is_admin import IsAdmin
+from telebot.filters.is_admin import IsAdmin
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 import os

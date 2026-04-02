@@ -1,23 +1,67 @@
-version: "3.9"
 services:
-  redis:
-    image: redis:7.4-alpine
+  minio: 
+    image: minio/minio:latest
     ports:
-      - "6379:6379"
-    restart: unless-stopped
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-    - "${RABBITMQ_PORT}:${RABBITMQ_PORT}"
-    - "${RABBITMQ_MANAGEMENT_PORT}:${RABBITMQ_MANAGEMENT_PORT}"
+      - "${MINIO_API_PORT}:9000"
+      - "${MINIO_CONSOLE_PORT}:9001"
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+    - minio_data:/data
+    # need specify path
+    command: server /data --console-address ":${MINIO_CONSOLE_PORT}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 10s
+
+  rmq:
+    build: ./rmq
+    ports:
+    - "${RMQ_PORT}:5672"
+    - "${RMQ_MANAGEMENT_PORT}:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RMQ_PASSWORD}
+    restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+
   celery_worker:
-    #build: .
-    # tyt nado sobrat docker obraz
-    command: celery -A new_face.celery_app.app worker --loglevel=info
-    env_file:
-      - .env
+    build: .
     depends_on:
-      - rabbitmq
+      - rmq
+      # - api
+    environment:
+      - RMQ_URL=amqp://${RMQ_USER}:${RMQ_PASSWORD}@${RMQ_HOST}:${RMQ_PORT}/
+      - API_URL=http://${API_HOST}:${API_PORT}/update_task_status_api/
+    restart: always
+    working_dir: /yournewface/api
+    entrypoint: celery -A celery_app worker --loglevel=info --concurrency=1
+    #concurrency=1 on my luck
+
+
+
+  Flower:
+    build: .
+    ports:
+      - 5555:5555
+    depends_on:
+      - rmq
+      - celery_worker
+    environment:
+      - RMQ_URL=aamqp://${RMQ_USER}:${RMQ_PASSWORD}@${RMQ_HOST}:${RMQ_PORT}/
+    restart: always
+    working_dir: /yournewface/api
+    entrypoint: celery -A celery_app flower --port=5555
+      
+volumes:
+  minio_data:
