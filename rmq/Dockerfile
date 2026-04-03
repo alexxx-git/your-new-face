@@ -1,3 +1,3 @@
-FROM rabbitmq:4.3-rc-alpine
+FROM rabbitmq:4.2.5-management
 
 ADD definitions.json /etc/rabbitmq/
