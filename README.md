@@ -10,3 +10,4 @@ there  are added and includeed tasks from homeworks
 - docker-compose
 - about rabbitmq celery workers adn other
 - nginx config
+ветка для мерджа домашек
