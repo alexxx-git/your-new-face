@@ -12,8 +12,12 @@ aiosignal==1.4.0
     # via aiohttp
 amqp==5.3.1
     # via kombu
+annotated-doc==0.0.4
+    # via fastapi
 annotated-types==0.7.0
     # via pydantic
+anyio==4.13.0
+    # via starlette
 attrs==26.1.0
     # via aiohttp
 billiard==4.2.4
@@ -37,6 +41,7 @@ click==8.3.1
     #   click-plugins
     #   click-repl
     #   rq
+    #   uvicorn
 click-didyoumean==0.3.1
     # via celery
 click-plugins==1.1.1.2
@@ -51,6 +56,8 @@ distlib==0.4.0
     # via virtualenv
 faker==40.12.0
     # via your-new-face
+fastapi==0.135.3
+    # via your-new-face
 filelock==3.25.2
     # via
     #   python-discovery
@@ -61,12 +68,15 @@ frozenlist==1.8.0
     # via
     #   aiohttp
     #   aiosignal
+h11==0.16.0
+    # via uvicorn
 humanize==4.15.0
     # via flower
 identify==2.6.18
     # via pre-commit
 idna==3.11
     # via
+    #   anyio
     #   requests
     #   yarl
 kombu==5.6.2
@@ -98,7 +108,9 @@ propcache==0.4.1
     #   aiohttp
     #   yarl
 pydantic==2.12.5
-    # via aiogram
+    # via
+    #   aiogram
+    #   fastapi
 pydantic-core==2.41.5
     # via pydantic
 python-dateutil==2.9.0.post0
@@ -123,17 +135,24 @@ ruff==0.15.8
     # via your-new-face
 six==1.17.0
     # via python-dateutil
+starlette==1.0.0
+    # via fastapi
 tornado==6.5.5
     # via flower
 typing-extensions==4.15.0
     # via
     #   aiogram
     #   aiosignal
+    #   anyio
+    #   fastapi
     #   pydantic
     #   pydantic-core
+    #   starlette
     #   typing-inspection
 typing-inspection==0.4.2
-    # via pydantic
+    # via
+    #   fastapi
+    #   pydantic
 tzdata==2025.3
     # via
     #   faker
@@ -143,6 +162,8 @@ tzlocal==5.3.1
     # via celery
 urllib3==2.6.3
     # via requests
+uvicorn==0.43.0
+    # via your-new-face
 vine==5.1.0
     # via
     #   amqp

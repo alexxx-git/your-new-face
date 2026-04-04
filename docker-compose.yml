@@ -65,6 +65,22 @@ services:
     restart: always
     working_dir: /yournewface/api
     entrypoint: celery -A celery_app flower --port=5555
-      
+  api:
+    build: .
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+    environment:
+      - PYTHONPATH=/yournewface
+    depends_on:
+      - rmq
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./api/static:/var/www/static:ro  
+    depends_on:
+      - api
+    restart: always
 volumes:
   minio_data:

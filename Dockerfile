@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir \
 COPY . /yournewface/
 WORKDIR /yournewface
 
-EXPOSE 8080
+EXPOSE 8000
 
 # CMD 
 # CMD ["python", "app.py"]
