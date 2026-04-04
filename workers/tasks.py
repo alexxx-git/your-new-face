@@ -1,6 +1,8 @@
-from new_face.celery_app import app
+from api.celery_app import app
 import time
-@app.task
+
+
+@app.task()
 def test_task(data):
     print(f"start: {data}")
     time.sleep(2)  # workings

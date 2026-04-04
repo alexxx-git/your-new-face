@@ -43,6 +43,7 @@ services:
     environment:
       - RMQ_URL=amqp://${RMQ_USER}:${RMQ_PASSWORD}@${RMQ_HOST}:${RMQ_PORT}/
       - API_URL=http://${API_HOST}:${API_PORT}/update_task_status_api/
+      - PYTHONPATH=/yournewface  
     restart: always
     working_dir: /yournewface/api
     entrypoint: celery -A celery_app worker --loglevel=info --concurrency=1
@@ -50,15 +51,17 @@ services:
 
 
 
-  Flower:
+  flower:
     build: .
+    # command: celery -A api.celery_app flower --port=5555
     ports:
       - 5555:5555
     depends_on:
       - rmq
       - celery_worker
     environment:
-      - RMQ_URL=aamqp://${RMQ_USER}:${RMQ_PASSWORD}@${RMQ_HOST}:${RMQ_PORT}/
+     - PYTHONPATH=/yournewface
+     - RMQ_URL=amqp://${RMQ_USER}:${RMQ_PASSWORD}@${RMQ_HOST}:${RMQ_PORT}/
     restart: always
     working_dir: /yournewface/api
     entrypoint: celery -A celery_app flower --port=5555
