@@ -12,6 +12,8 @@ spec:
       labels:
         app: api
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - name: api
           image: yournewface_api:latest
