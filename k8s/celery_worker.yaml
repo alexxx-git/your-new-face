@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      labels:
+        app: celery-worker
+    spec:
+      containers:
+        - name: celery-worker
+          image: yournewface_api:latest
+          command: ["celery", "-A", "celery_app", "worker", "--loglevel=info"]
+          env:
+            - name: RMQ_HOST
+              value: "rmq-service"
+            - name: RMQ_PORT
+              value: "5672"
