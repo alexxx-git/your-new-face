@@ -69,50 +69,101 @@
         </div>
     </div>
 
-    <script>
-        const btn = document.getElementById('processBtn');
-        const status = document.getElementById('status');
-        const resultDiv = document.getElementById('result');
-        
-        btn.addEventListener('click', async () => {
-            btn.disabled = true;
-            btn.textContent = '⏳ Обрабатываем...';
-            status.textContent = 'PENDING';
-            status.classList.add('loading');
-            
-            try {
-                // 1. Создаём задачу
-                const taskRes = await fetch('/api/tasks', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({face_path: 'demo_face.jpg'})
-                });
-                const taskData = await taskRes.json();
-                
-                // 2. Polling статус
-                const pollStatus = async () => {
-                    const res = await fetch(`/api/tasks/${taskData.task_id}`);
-                    const data = await res.json();
-                    
-                    status.textContent = data.status;
-                    if (data.ready) {
-                        status.classList.remove('loading');
-                        resultDiv.innerHTML = `<strong>✅ Результат:</strong> ${JSON.stringify(data.result, null, 2)}`;
-                        btn.disabled = false;
-                        btn.textContent = '🚀 Обработать ещё';
-                        return;
-                    }
-                    setTimeout(pollStatus, 2000);
-                };
-                pollStatus();
-                
-            } catch (error) {
-                status.textContent = '❌ Ошибка';
-                resultDiv.textContent = error.message;
+<script>
+const btn = document.getElementById('processBtn');
+const status = document.getElementById('status');
+const resultDiv = document.getElementById('result');
+
+let isPolling = false;
+let attempts = 0;
+const MAX_ATTEMPTS = 60; // ~2 минуты при 2s interval
+
+btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    btn.textContent = '⏳ Обрабатываем...';
+
+    status.textContent = 'PENDING';
+    status.classList.add('loading');
+
+    resultDiv.innerHTML = '';
+    isPolling = true;
+    attempts = 0;
+
+    try {
+        // 1. создаём задачу
+        const taskRes = await fetch('/api/tasks', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({face_path: 'demo_face.jpg'})
+        });
+
+        const taskData = await taskRes.json();
+
+        // 2. polling
+        const pollStatus = async () => {
+            if (!isPolling) return;
+
+            if (attempts++ > MAX_ATTEMPTS) {
+                isPolling = false;
+                status.textContent = 'TIMEOUT';
+                status.classList.remove('loading');
+
                 btn.disabled = false;
                 btn.textContent = '🚀 Попробовать снова';
+                return;
             }
-        });
-    </script>
+
+            const res = await fetch(`/api/tasks/${taskData.task_id}`);
+            const data = await res.json();
+
+            status.textContent = data.status;
+
+            // ✅ SUCCESS
+            if (data.status === 'SUCCESS') {
+                isPolling = false;
+                status.classList.remove('loading');
+
+                resultDiv.innerHTML =
+                    `<strong>✅ Результат:</strong><pre>${JSON.stringify(data.result, null, 2)}</pre>`;
+
+                btn.disabled = false;
+                btn.textContent = '🚀 Обработать ещё';
+                return;
+            }
+
+            // ❌ FAILURE
+            if (data.status === 'FAILURE' || data.status === 'ERROR') {
+                isPolling = false;
+                status.classList.remove('loading');
+
+                resultDiv.innerHTML = `<strong>❌ Ошибка обработки</strong>`;
+
+                btn.disabled = false;
+                btn.textContent = '🚀 Попробовать снова';
+                return;
+            }
+
+            // 🟡 still running
+            btn.disabled = true;
+            btn.textContent = '⏳ Обрабатываем...';
+
+            setTimeout(pollStatus, 2000);
+        };
+
+        pollStatus();
+
+    } catch (error) {
+        isPolling = false;
+
+        status.textContent = '❌ Ошибка';
+        status.classList.remove('loading');
+
+        resultDiv.textContent = error.message;
+
+        btn.disabled = false;
+        btn.textContent = '🚀 Попробовать снова';
+    }
+});
+</script>
 </body>
 </html>

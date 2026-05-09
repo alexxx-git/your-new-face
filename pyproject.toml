@@ -3,7 +3,7 @@ name = "your-new-face"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = "==3.12.*"
 dependencies = [
     "pathlib>=1.0.1",
     "aiogram>=3.24.0",
@@ -17,34 +17,16 @@ dependencies = [
     "flower>=2.0.1",
     "fastapi>=0.135.3",
     "uvicorn>=0.43.0",
-]
-
-
-
-
-[dependency-groups]
-# Для разработки и тестирования
-ml = [
     "accelerate>=1.13.0",
-    "deepface>=0.0.99",
     "diffusers>=0.37.1",
-    "pathlib>=1.0.1",
-    "aiogram>=3.24.0",
-    "celery>=5.6.2",
-    "faker>=40.1.0",
-    "pre-commit>=4.5.1",
-    "python-dotenv>=1.2.1",
-    "redis>=7.1.0",
-    "requests>=2.32.5",
-    "rq>=2.6.1",
-    "ruff>=0.14.11",
-    "tensorflow>=2.21.0",
-    "tf-keras>=2.21.0",
     "torch>=2.9.1",
-    "torchvision==0.24.1", #not work without this. says hash mismathes
+    "torchvision>=0.24.1",
     "transformers>=5.4.0",
-    "flower>=2.0.1",               
+    "xformers>=0.0.33.post2",
+    "pillow>=12.1.1",
 ]
+
+
 [tool.uv.sources]
 torch = [
   { index = "pytorch-cu130",marker = "sys_platform == 'win32' or sys_platform == 'linux'" },
@@ -52,6 +34,10 @@ torch = [
 torchvision = [
   { index = "pytorch-cu130", marker = "sys_platform == 'win32' or sys_platform == 'linux'" },
 ]
+xformers = [
+  { index = "pytorch-cu130", marker = "sys_platform == 'win32' or sys_platform == 'linux'" },
+]
+
 [[tool.uv.index]]
 name = "pytorch-cu130"
 url = "https://download.pytorch.org/whl/cu130"

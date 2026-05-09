@@ -88,5 +88,15 @@ services:
       - ./api/static:/usr/share/nginx/html:ro
     expose:
     - "80"
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
 volumes:
   minio_data:
+  grafana-storage:

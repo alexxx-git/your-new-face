@@ -13,16 +13,16 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # print(f"CUDA version: {torch.version.cuda}")
 # print(f"PyTorch version: {torch.__version__}")
 # --- 1. Получаем лицо ---
-faces = DeepFace.extract_faces("new_face/input.jpg", enforce_detection=False)
+# faces = DeepFace.extract_faces("new_face/input.jpg", enforce_detection=False)
 
-if len(faces) == 0:
-    raise ValueError("No face")
+# if len(faces) == 0:
+#     raise ValueError("No face")
 
-face = faces[0]["face"]  # RGB float [0..1]
-face = (face * 255).astype(np.uint8)
+# face = faces[0]["face"]  # RGB float [0..1]
+# face = (face * 255).astype(np.uint8)
 
 # # numpy → PIL
-init_image = Image.fromarray(face).resize((512, 512))
+# init_image = Image.fromarray(face).resize((512, 512))
 # --- 2. Загружаем SDXL ---
 
 # pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
@@ -57,6 +57,6 @@ combined.paste(result, (init_image.width, 0))
 
 # --- 6. Сохраняем ---
 output_path = Path("output") / "comparison_result.jpg"
-output_path.parent.mkdir(parents=True, exist_ok=True)  # создать папку если нет
+output_path.parent.mkdir(parents=True, exist_ok=True)
 combined.save(output_path)
 print("Готово: comparison_result.jpg")
