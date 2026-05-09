@@ -1,4 +1,4 @@
-from deepface import DeepFace
+# from deepface import DeepFace
 from diffusers import StableDiffusionImg2ImgPipeline
 import numpy as np
 import torch
@@ -39,7 +39,7 @@ pipe.enable_attention_slicing()  # экономит память при гене
 
 # --- 3. Prompt---
 prompt = "portrait of a 65 year old person, realistic skin, wrinkles, detailed face, high quality"
-
+init_image = ""
 # --- 4. Генерация ---
 result = pipe(
     prompt=prompt,

@@ -3,7 +3,7 @@ name = "your-new-face"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = "==3.12.*"
+requires-python = "==3.11.*"
 dependencies = [
     "pathlib>=1.0.1",
     "aiogram>=3.24.0",
@@ -17,13 +17,25 @@ dependencies = [
     "flower>=2.0.1",
     "fastapi>=0.135.3",
     "uvicorn>=0.43.0",
+    "psutil>=7.2.2",
+    "prometheus-fastapi-instrumentator>=7.1.0",
+    "sqlalchemy>=2.0.49",
+    "psycopg2-binary>=2.9.12",
+    "asyncpg>=0.31.0",
+    "pillow>=12.1.1",
+    "alembic>=1.17.0",
+    "greenlet>=3.3.0",
+    "minio>=7.2.20",
+    "python-multipart>=0.0.27",
+]
+[project.optional-dependencies]
+ml = [
     "accelerate>=1.13.0",
     "diffusers>=0.37.1",
     "torch>=2.9.1",
     "torchvision>=0.24.1",
     "transformers>=5.4.0",
     "xformers>=0.0.33.post2",
-    "pillow>=12.1.1",
 ]
 
 

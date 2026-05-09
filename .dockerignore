@@ -4,6 +4,8 @@ __pycache__/
 *.pyo
 *.pyd
 *.swp
+.venv/
+output/
 
 # Локальные данные, логи и временные файлы
 outputs/
