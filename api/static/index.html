@@ -129,6 +129,28 @@
             white-space: nowrap;
         }
 
+        .age-control {
+            display: grid;
+            gap: 8px;
+            margin-top: 18px;
+            text-align: left;
+        }
+
+        .age-control label {
+            color: #344054;
+            font-weight: 700;
+        }
+
+        .age-control input {
+            width: 100%;
+            accent-color: #635bff;
+        }
+
+        .age-value {
+            color: #667085;
+            font-size: 14px;
+        }
+
         button {
             flex: 0 0 auto;
             border: 0;
@@ -218,6 +240,12 @@
                 </label>
                 <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp">
 
+                <div class="age-control">
+                    <label for="targetAge">Желаемый возраст</label>
+                    <input id="targetAge" type="range" min="20" max="100" step="1" value="20">
+                    <div class="age-value">Возраст: <span id="targetAgeValue">20</span></div>
+                </div>
+
                 <div class="controls">
                     <div class="file-name" id="fileName">Файл не выбран</div>
                     <button id="processBtn" disabled>Обработать</button>
@@ -246,7 +274,7 @@
 <script>
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const MAX_ATTEMPTS = 90;
-const POLL_INTERVAL_MS = 1500;
+const POLL_INTERVAL_MS = 1000;
 
 const dropZone = document.getElementById("dropZone");
 const fileInput = document.getElementById("fileInput");
@@ -257,6 +285,8 @@ const resultPlaceholder = document.getElementById("resultPlaceholder");
 const fileName = document.getElementById("fileName");
 const processBtn = document.getElementById("processBtn");
 const statusBox = document.getElementById("status");
+const targetAge = document.getElementById("targetAge");
+const targetAgeValue = document.getElementById("targetAgeValue");
 
 let selectedFile = null;
 let pollTimer = null;
@@ -301,6 +331,10 @@ fileInput.addEventListener("change", () => {
     selectFile(fileInput.files[0]);
 });
 
+targetAge.addEventListener("input", () => {
+    targetAgeValue.textContent = targetAge.value;
+});
+
 ["dragenter", "dragover"].forEach((eventName) => {
     dropZone.addEventListener(eventName, (event) => {
         event.preventDefault();
@@ -329,6 +363,7 @@ processBtn.addEventListener("click", async () => {
 
     const formData = new FormData();
     formData.append("file", selectedFile);
+    formData.append("target_age", targetAge.value);
 
     try {
         const response = await fetch("/api/tasks/upload", {

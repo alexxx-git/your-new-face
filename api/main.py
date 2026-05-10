@@ -1,7 +1,7 @@
 from pathlib import Path
 from uuid import uuid4
 
-from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -62,8 +62,13 @@ async def create_task(request: TaskRequest):
 
 @app.post("/api/tasks/upload")
 async def upload_task(
-    file: UploadFile = File(...), session: AsyncSession = Depends(get_db_session)
+    file: UploadFile = File(...),
+    target_age: int = Form(20),
+    session: AsyncSession = Depends(get_db_session),
 ):
+    if not 20 <= target_age <= 100:
+        raise HTTPException(status_code=400, detail="Target age must be from 20 to 100.")
+
     if file.content_type not in ALLOWED_IMAGE_TYPES:
         raise HTTPException(
             status_code=400,
@@ -87,6 +92,7 @@ async def upload_task(
         content_type=file.content_type,
         original_filename=file.filename,
         file_size=len(content),
+        target_age=target_age,
     )
 
     celery_task = process_face.delay(str(db_task.id))
@@ -96,6 +102,7 @@ async def upload_task(
         "task_id": str(db_task.id),
         "celery_task_id": celery_task.id,
         "status": "PENDING",
+        "target_age": target_age,
     }
 
 

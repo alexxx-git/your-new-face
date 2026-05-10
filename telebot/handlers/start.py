@@ -29,7 +29,7 @@ import os
 
 start_router = Router()
 API_BASE_URL = os.getenv("BOT_API_BASE_URL", "http://localhost").rstrip("/")
-POLL_INTERVAL_SECONDS = 2
+POLL_INTERVAL_SECONDS = 1
 MAX_POLL_ATTEMPTS = 60
 
 
@@ -98,10 +98,12 @@ class WwwState(StatesGroup):
 @start_router.message(Command("foto"))
 async def start_command(message: Message, state: FSMContext):
     await state.set_state(WwwState.waiting_photo)
+    await state.update_data(age=20)
     await message.answer(
-        "Пожалуйста, сфотографируйте объект и отправьте фото в этот чат.",
+        "Выберите желаемый возраст и отправьте фото в этот чат.",
         reply_markup=create_foto(),
     )
+    await message.answer("Желаемый возраст: 20", reply_markup=create_age_keyboard())
 
 
 # Хендлер, который ловит отправленное фото
@@ -119,7 +121,9 @@ async def handle_file(message: Message, state: FSMContext, bot: Bot):
         await message.answer("Пожалуйста, отправьте изображение (фото или документ).")
         return
 
-    await message.answer("Фото получено. Отправляю на обработку...")
+    data = await state.get_data()
+    target_age = data.get("age", 20)
+    await message.answer(f"Фото получено. Возраст: {target_age}. Отправляю на обработку...")
 
     try:
         file = await bot.get_file(file_id)
@@ -132,6 +136,7 @@ async def handle_file(message: Message, state: FSMContext, bot: Bot):
                 image_bytes=image_bytes,
                 filename=filename,
                 content_type=content_type,
+                target_age=target_age,
             )
             await message.answer(f"Задача создана: {task_id}. Жду результат...")
 
@@ -142,7 +147,9 @@ async def handle_file(message: Message, state: FSMContext, bot: Bot):
             result_bytes,
             filename=f"mirrored_{filename}",
         )
-        await message.answer_photo(result_file, caption="Готово. Фото отзеркалено.")
+        await message.answer_photo(
+            result_file, caption=f"Готово. Фото отзеркалено. Возраст: {target_age}."
+        )
     except Exception as exc:
         await message.answer(f"Ошибка обработки: {exc}")
         return
@@ -160,6 +167,7 @@ async def _create_processing_task(
     image_bytes: bytes,
     filename: str,
     content_type: str,
+    target_age: int,
 ) -> str:
     form = aiohttp.FormData()
     form.add_field(
@@ -168,6 +176,7 @@ async def _create_processing_task(
         filename=filename,
         content_type=content_type,
     )
+    form.add_field("target_age", str(target_age))
 
     async with session.post(f"{API_BASE_URL}/api/tasks/upload", data=form) as response:
         data = await _read_json_response(response)

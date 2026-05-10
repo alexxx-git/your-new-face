@@ -21,6 +21,7 @@ class Task(Base):
     status: Mapped[str] = mapped_column(String(32), default="UPLOADED", nullable=False)
     source_object: Mapped[str] = mapped_column(Text, nullable=False)
     result_object: Mapped[str | None] = mapped_column(Text)
+    target_age: Mapped[int | None] = mapped_column(Integer)
     content_type: Mapped[str | None] = mapped_column(String(128))
     original_filename: Mapped[str | None] = mapped_column(Text)
     file_size: Mapped[int | None] = mapped_column(BigInteger)

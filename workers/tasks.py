@@ -32,7 +32,7 @@ def process_face(task_id: str):
 
 async def process_face_async(task_id: str):
     print(f"Processing task: {task_id}")
-    await asyncio.sleep(5)  # временная имитация тяжелой обработки
+    await asyncio.sleep(1)  # временная имитация тяжелой обработки
 
     try:
         async with async_session() as session:
@@ -42,6 +42,7 @@ async def process_face_async(task_id: str):
 
             source_object = task.source_object
             content_type = task.content_type or "image/jpeg"
+            target_age = task.target_age
 
         source_bytes = download_bytes(source_object)
 
@@ -68,6 +69,7 @@ async def process_face_async(task_id: str):
             "source_object": source_object,
             "result_object": result_object,
             "result_url": f"/api/images/{result_object}",
+            "target_age": target_age,
         }
     except Exception as exc:
         async with async_session() as session:

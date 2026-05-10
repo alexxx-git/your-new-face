@@ -13,6 +13,7 @@ async def create_task(
     content_type: str,
     original_filename: str | None,
     file_size: int,
+    target_age: int | None,
 ) -> Task:
     task = Task(
         status="UPLOADED",
@@ -20,6 +21,7 @@ async def create_task(
         content_type=content_type,
         original_filename=original_filename,
         file_size=file_size,
+        target_age=target_age,
     )
     session.add(task)
     await session.commit()
@@ -102,6 +104,7 @@ def task_to_response(task: Task) -> dict:
         "task_id": str(task.id),
         "celery_task_id": task.celery_task_id,
         "status": task.status,
+        "target_age": task.target_age,
         "result": result,
     }
 
