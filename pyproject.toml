@@ -31,7 +31,12 @@ dependencies = [
 [project.optional-dependencies]
 ml = [
     "accelerate>=1.13.0",
+    "brisque>=0.2.0",
     "diffusers>=0.37.1",
+    "insightface>=0.7.3",
+    "lpips>=0.1.4",
+    "onnxruntime>=1.26.0",
+    "opencv-python-headless>=4.13.0.92",
     "torch>=2.9.1",
     "torchvision>=0.24.1",
     "transformers>=5.4.0",

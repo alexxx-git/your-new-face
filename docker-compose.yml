@@ -120,6 +120,9 @@ services:
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
     volumes:
       - grafana-storage:/var/lib/grafana
+      - ./monitoring/grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - ./monitoring/grafana-dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ./monitoring/your-new-face-overview.json:/var/lib/grafana/dashboards/your-new-face-overview.json:ro
     depends_on:
       - prometheus
       - loki
@@ -147,6 +150,7 @@ services:
     depends_on:
       - api
       - cadvisor
+      - nvidia-gpu-exporter
 
   loki:
     image: grafana/loki:latest
@@ -179,6 +183,14 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+
+  nvidia-gpu-exporter:
+    image: utkuozdemir/nvidia_gpu_exporter:1.4.1
+    restart: always
+    gpus: all
+    ports:
+      - "9835:9835"
+
 volumes:
   minio_data:
   grafana-storage:

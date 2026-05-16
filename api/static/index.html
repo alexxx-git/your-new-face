@@ -94,9 +94,13 @@
         }
 
         .image-box img {
-            width: 100%;
-            height: 100%;
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
             object-fit: contain;
+            object-position: center;
         }
 
         .placeholder {
@@ -272,7 +276,10 @@
     </main>
 
 <script>
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_UPLOAD_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_SOURCE_FILE_SIZE = 20 * 1024 * 1024;
+const MAX_IMAGE_SIDE = 1600;
+const IMAGE_QUALITY = 0.9;
 const MAX_ATTEMPTS = 90;
 const POLL_INTERVAL_MS = 1000;
 
@@ -290,6 +297,7 @@ const targetAgeValue = document.getElementById("targetAgeValue");
 
 let selectedFile = null;
 let pollTimer = null;
+let sourcePreviewUrl = null;
 
 function setStatus(text, type = "default") {
     statusBox.textContent = text;
@@ -303,7 +311,64 @@ function resetResult() {
     resultPlaceholder.hidden = false;
 }
 
-function selectFile(file) {
+function setSourcePreview(file) {
+    if (sourcePreviewUrl) {
+        URL.revokeObjectURL(sourcePreviewUrl);
+    }
+
+    sourcePreviewUrl = URL.createObjectURL(file);
+    sourcePreview.src = sourcePreviewUrl;
+    sourcePreview.hidden = false;
+    uploadPlaceholder.hidden = true;
+}
+
+function loadImage(file) {
+    return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const image = new Image();
+
+        image.onload = () => {
+            URL.revokeObjectURL(url);
+            resolve(image);
+        };
+        image.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject(new Error("Не удалось прочитать изображение."));
+        };
+        image.src = url;
+    });
+}
+
+async function prepareImageForUpload(file) {
+    const image = await loadImage(file);
+    const scale = Math.min(1, MAX_IMAGE_SIDE / Math.max(image.naturalWidth, image.naturalHeight));
+
+    if (scale === 1 && file.size <= MAX_UPLOAD_FILE_SIZE) {
+        return file;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(image.naturalWidth * scale);
+    canvas.height = Math.round(image.naturalHeight * scale);
+
+    const context = canvas.getContext("2d");
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    const outputType = file.type === "image/png" ? "image/png" : "image/jpeg";
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, outputType, IMAGE_QUALITY));
+
+    if (!blob) {
+        throw new Error("Не удалось подготовить изображение к загрузке.");
+    }
+
+    const extension = outputType === "image/png" ? "png" : "jpg";
+    const name = file.name.replace(/\.[^.]+$/, `.${extension}`);
+    return new File([blob], name, { type: outputType, lastModified: Date.now() });
+}
+
+async function selectFile(file) {
     if (!file) return;
 
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
@@ -311,20 +376,33 @@ function selectFile(file) {
         return;
     }
 
-    if (file.size > MAX_FILE_SIZE) {
-        setStatus("Файл слишком большой. Максимальный размер: 5 MB.", "error");
+    if (file.size > MAX_SOURCE_FILE_SIZE) {
+        setStatus("Файл слишком большой. Максимальный размер исходника: 20 MB.", "error");
         return;
     }
 
-    selectedFile = file;
-    fileName.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-    processBtn.disabled = false;
-    setStatus("Файл выбран. Можно запускать обработку.");
-    resetResult();
+    try {
+        processBtn.disabled = true;
+        setStatus("Готовим фото к загрузке...", "loading");
+        resetResult();
+        setSourcePreview(file);
 
-    sourcePreview.src = URL.createObjectURL(file);
-    sourcePreview.hidden = false;
-    uploadPlaceholder.hidden = true;
+        selectedFile = await prepareImageForUpload(file);
+        if (selectedFile.size > MAX_UPLOAD_FILE_SIZE) {
+            throw new Error("После сжатия файл всё ещё больше 5 MB. Попробуйте фото поменьше.");
+        }
+
+        const originalSize = (file.size / 1024 / 1024).toFixed(2);
+        const uploadSize = (selectedFile.size / 1024 / 1024).toFixed(2);
+        fileName.textContent = `${file.name} (${originalSize} MB → ${uploadSize} MB)`;
+        processBtn.disabled = false;
+        setStatus("Файл выбран и вписан без обрезки. Можно запускать обработку.");
+    } catch (error) {
+        selectedFile = null;
+        fileName.textContent = "Файл не выбран";
+        processBtn.disabled = true;
+        setStatus(error.message, "error");
+    }
 }
 
 fileInput.addEventListener("change", () => {
