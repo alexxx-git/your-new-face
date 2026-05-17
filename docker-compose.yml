@@ -37,6 +37,7 @@ services:
 
   celery_worker:
     build: .
+    gpus: all
     depends_on:
       - rmq
       - minio
@@ -55,9 +56,17 @@ services:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
       - MINIO_BUCKET=${MINIO_BUCKET}
+      - YNF_MODELS_DIR=/yournewface/new_face/models
+      - YNF_OUTPUT_DIR=/tmp/your-new-face/outputs
+      - YNF_METRICS_FILE=/tmp/your-new-face/single_pass_metrics.jsonl
+      - YNF_DEVICE=cuda
+      - YNF_LORA_MODE=custom
+      - YNF_INSIGHTFACE_ROOT=/yournewface/new_face
+    volumes:
+      - D:/Projects/models:/yournewface/new_face/models:ro
     restart: always
     working_dir: /yournewface/api
-    entrypoint: celery -A celery_app worker --loglevel=info --concurrency=1
+    entrypoint: celery -A celery_app worker --loglevel=info --pool=solo --concurrency=1
     #concurrency=1 on my luck
 
 

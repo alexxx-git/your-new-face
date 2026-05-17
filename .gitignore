@@ -20,13 +20,38 @@ test.py
 .venv/
 venv
 
-#DATA
-data/face_dataset/
+# Environment
 .env
+.env.*
+!.env.example
+new_face/data/
+
+# Data, models, generated artifacts
+data/face_dataset/
 new_face/models/
 new_face/output/
 output/
+outputs/
+logs/
+tmp/
 new_face/whl/
+minio_data/
+*.log
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+*.pt
+*.ckpt
+*.safetensors
+*.bin
+*.npz
+
+# Local experiments and notebooks
+expirements/
+experiments/
+*.ipynb
 
 # other
 k8s/

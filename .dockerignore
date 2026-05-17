@@ -21,10 +21,19 @@ tmp/
 *.npz
 new_face/models/
 data/
+expirements/
+experiments/
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
 
 # MinIO и другие локальные файлы
 minio_data/
 .env
+.env.*
+!.env.example
 
 # Git и IDE файлы
 .git/

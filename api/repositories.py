@@ -1,9 +1,10 @@
 from datetime import datetime, timezone
 from uuid import UUID
 
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.models import Task
+from api.models import GenerationMetric, Task
 
 
 async def create_task(
@@ -89,7 +90,71 @@ async def mark_task_failed(
     return task
 
 
-def task_to_response(task: Task) -> dict:
+async def create_generation_metric(
+    session: AsyncSession,
+    *,
+    task_id: str | UUID,
+    target_age: int | None,
+    source_age: int | None,
+    result_age: int | None,
+    face_similarity: float | None,
+    quality_score: float | None,
+    metrics_json: dict | None,
+) -> GenerationMetric:
+    metric = GenerationMetric(
+        task_id=_task_uuid(task_id),
+        target_age=target_age,
+        source_age=source_age,
+        result_age=result_age,
+        face_similarity=face_similarity,
+        quality_score=quality_score,
+        metrics_json=metrics_json,
+    )
+    session.add(metric)
+    await session.commit()
+    await session.refresh(metric)
+    return metric
+
+
+async def get_latest_generation_metric(session: AsyncSession) -> GenerationMetric | None:
+    result = await session.execute(
+        select(GenerationMetric).order_by(GenerationMetric.created_at.desc()).limit(1)
+    )
+    return result.scalar_one_or_none()
+
+
+async def count_generation_metrics(session: AsyncSession) -> int:
+    result = await session.execute(select(func.count(GenerationMetric.id)))
+    return int(result.scalar_one())
+
+
+async def get_task_queue_info(session: AsyncSession, task: Task) -> dict:
+    if task.status == "PROCESSING":
+        return {"queue_position": 0, "queue_ahead": 0}
+
+    if task.status != "PENDING":
+        return {"queue_position": None, "queue_ahead": None}
+
+    pending_before = await session.execute(
+        select(func.count(Task.id)).where(
+            Task.status == "PENDING",
+            Task.created_at < task.created_at,
+        )
+    )
+    processing_now = await session.execute(
+        select(func.count(Task.id)).where(Task.status == "PROCESSING")
+    )
+
+    pending_before_count = int(pending_before.scalar_one())
+    processing_count = int(processing_now.scalar_one())
+
+    return {
+        "queue_position": pending_before_count + 1,
+        "queue_ahead": pending_before_count + processing_count,
+    }
+
+
+def task_to_response(task: Task, queue_info: dict | None = None) -> dict:
     result = None
     if task.status == "SUCCESS" and task.result_object:
         result = {
@@ -100,13 +165,16 @@ def task_to_response(task: Task) -> dict:
     elif task.status == "FAILURE":
         result = {"error": task.error_message or "Task failed"}
 
-    return {
+    response = {
         "task_id": str(task.id),
         "celery_task_id": task.celery_task_id,
         "status": task.status,
         "target_age": task.target_age,
         "result": result,
     }
+    if queue_info is not None:
+        response.update(queue_info)
+    return response
 
 
 def _task_uuid(task_id: str | UUID) -> UUID:

@@ -36,6 +36,7 @@ ml = [
     "insightface>=0.7.3",
     "lpips>=0.1.4",
     "onnxruntime>=1.26.0",
+    "peft>=0.18.0",
     "opencv-python-headless>=4.13.0.92",
     "torch>=2.9.1",
     "torchvision>=0.24.1",

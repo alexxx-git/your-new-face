@@ -224,11 +224,10 @@
         <header class="header">
             <div>
                 <p class="eyebrow">Your New Face</p>
-                <h1>Обработка фото</h1>
+                <h1>Новый образ по фото</h1>
             </div>
             <p class="subtitle">
-                Загрузите изображение. Сейчас worker делает тестовую обработку:
-                зеркалит фото по вертикальной оси и возвращает результат.
+                Загрузите портрет, выберите желаемый возраст и получите обновлённое изображение.
             </p>
         </header>
 
@@ -246,7 +245,7 @@
 
                 <div class="age-control">
                     <label for="targetAge">Желаемый возраст</label>
-                    <input id="targetAge" type="range" min="20" max="100" step="1" value="20">
+                    <input id="targetAge" type="range" min="20" max="60" step="1" value="20">
                     <div class="age-value">Возраст: <span id="targetAgeValue">20</span></div>
                 </div>
 
@@ -262,14 +261,9 @@
                 <div class="image-box">
                     <div class="placeholder" id="resultPlaceholder">
                         <strong>Здесь появится обработанное фото</strong>
-                        <span>После завершения задачи Celery результат загрузится автоматически.</span>
+                        <span>После завершения обработки результат загрузится автоматически.</span>
                     </div>
                     <img id="resultPreview" alt="Обработанное фото" hidden>
-                </div>
-                <div class="links">
-                    <a href="/api/docs" target="_blank">API Docs</a>
-                    ·
-                    <a href="http://localhost:5555" target="_blank">Flower</a>
                 </div>
             </article>
         </section>
@@ -309,6 +303,33 @@ function resetResult() {
     resultPreview.hidden = true;
     resultPreview.removeAttribute("src");
     resultPlaceholder.hidden = false;
+}
+
+function setQueueStatus(task) {
+    if (task.status === "PROCESSING") {
+        setStatus("Ваше фото сейчас обрабатывается...", "loading");
+        return;
+    }
+
+    if (task.status === "PENDING" && Number.isInteger(task.queue_position)) {
+        if (task.queue_ahead > 0) {
+            setStatus(`Вы в очереди: №${task.queue_position}. Перед вами: ${task.queue_ahead}.`, "loading");
+        } else {
+            setStatus(`Вы в очереди: №${task.queue_position}. Скоро начнём обработку.`, "loading");
+        }
+        return;
+    }
+
+    setStatus("Ожидаем начала обработки...", "loading");
+}
+
+async function readJsonResponse(response) {
+    const text = await response.text();
+    try {
+        return text ? JSON.parse(text) : {};
+    } catch {
+        throw new Error("Сервис временно недоступен. Обновите страницу и попробуйте ещё раз.");
+    }
 }
 
 function setSourcePreview(file) {
@@ -383,7 +404,7 @@ async function selectFile(file) {
 
     try {
         processBtn.disabled = true;
-        setStatus("Готовим фото к загрузке...", "loading");
+    setStatus("Подготавливаем фото...", "loading");
         resetResult();
         setSourcePreview(file);
 
@@ -437,7 +458,7 @@ processBtn.addEventListener("click", async () => {
     clearTimeout(pollTimer);
     processBtn.disabled = true;
     resetResult();
-    setStatus("Загружаем фото в MinIO...", "loading");
+    setStatus("Загружаем фото...", "loading");
 
     const formData = new FormData();
     formData.append("file", selectedFile);
@@ -450,12 +471,12 @@ processBtn.addEventListener("click", async () => {
         });
 
         if (!response.ok) {
-            const error = await response.json();
+            const error = await readJsonResponse(response);
             throw new Error(error.detail || "Ошибка загрузки файла");
         }
 
-        const task = await response.json();
-        setStatus("Задача отправлена в Celery. Ждём результат...", "loading");
+        const task = await readJsonResponse(response);
+        setQueueStatus(task);
         pollTask(task.task_id, 0);
     } catch (error) {
         processBtn.disabled = false;
@@ -472,24 +493,29 @@ async function pollTask(taskId, attempt) {
 
     try {
         const response = await fetch(`/api/tasks/${taskId}`);
-        const task = await response.json();
+        if (!response.ok) {
+            const error = await readJsonResponse(response);
+            throw new Error(error.detail || "Не удалось получить статус обработки.");
+        }
+
+        const task = await readJsonResponse(response);
 
         if (task.status === "SUCCESS") {
             resultPreview.src = `${task.result.result_url}?t=${Date.now()}`;
             resultPreview.hidden = false;
             resultPlaceholder.hidden = true;
             processBtn.disabled = false;
-            setStatus("Готово. Фото отзеркалено.");
+            setStatus("Готово. Результат загружен.");
             return;
         }
 
         if (task.status === "FAILURE") {
             processBtn.disabled = false;
-            setStatus(task.result?.error || "Worker завершился с ошибкой.", "error");
+            setStatus(task.result?.error || "Не удалось обработать фото.", "error");
             return;
         }
 
-        setStatus(`Статус задачи: ${task.status}`, "loading");
+        setQueueStatus(task);
         pollTimer = setTimeout(() => pollTask(taskId, attempt + 1), POLL_INTERVAL_MS);
     } catch (error) {
         processBtn.disabled = false;
