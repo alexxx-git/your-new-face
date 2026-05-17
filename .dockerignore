@@ -1,0 +1,50 @@
+# Python кэш и временные файлы
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+.venv/
+output/
+
+# Локальные данные, логи и временные файлы
+outputs/
+logs/
+tmp/
+*.log
+
+# ML модели, веса, большие датасеты
+*.pt
+*.ckpt
+*.safetensors
+*.bin
+*.npz
+new_face/models/
+data/
+expirements/
+experiments/
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+
+# MinIO и другие локальные файлы
+minio_data/
+.env
+.env.*
+!.env.example
+
+# Git и IDE файлы
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Docker сам себя не должен включать
+Dockerfile
+docker-compose.override.yml

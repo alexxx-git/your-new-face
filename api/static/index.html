@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your New Face</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: #172033;
+            background:
+                radial-gradient(circle at top left, rgba(111, 119, 255, 0.32), transparent 32rem),
+                linear-gradient(135deg, #eef2ff 0%, #f8fafc 48%, #efe7ff 100%);
+        }
+
+        .page {
+            width: min(1180px, calc(100vw - 48px));
+            margin: 0 auto;
+            padding: 44px 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            gap: 24px;
+            align-items: flex-end;
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: #667085;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(34px, 4vw, 56px);
+            line-height: 1;
+        }
+
+        .subtitle {
+            max-width: 420px;
+            margin: 0;
+            color: #667085;
+            line-height: 1.6;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            min-height: 640px;
+            padding: 22px;
+            border: 1px solid rgba(102, 112, 133, 0.16);
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.86);
+            box-shadow: 0 24px 70px rgba(31, 41, 55, 0.11);
+            backdrop-filter: blur(14px);
+        }
+
+        .card h2 {
+            margin: 0 0 16px;
+            font-size: 22px;
+        }
+
+        .image-box {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            border: 2px dashed #b9c2d8;
+            border-radius: 22px;
+            background: #f8fafc;
+        }
+
+        .image-box.is-dragover {
+            border-color: #635bff;
+            background: #eef2ff;
+        }
+
+        .image-box img {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        .placeholder {
+            padding: 28px;
+            text-align: center;
+            color: #667085;
+        }
+
+        .placeholder strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #344054;
+            font-size: 18px;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .file-name {
+            min-width: 0;
+            color: #667085;
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .age-control {
+            display: grid;
+            gap: 8px;
+            margin-top: 18px;
+            text-align: left;
+        }
+
+        .age-control label {
+            color: #344054;
+            font-weight: 700;
+        }
+
+        .age-control input {
+            width: 100%;
+            accent-color: #635bff;
+        }
+
+        .age-value {
+            color: #667085;
+            font-size: 14px;
+        }
+
+        button {
+            flex: 0 0 auto;
+            border: 0;
+            border-radius: 999px;
+            padding: 13px 22px;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #635bff, #8b5cf6);
+            box-shadow: 0 14px 26px rgba(99, 91, 255, 0.24);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .status {
+            margin-top: 18px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            color: #475467;
+            background: #f2f4f7;
+        }
+
+        .status.is-loading {
+            color: #53389e;
+            background: #f4f3ff;
+        }
+
+        .status.is-error {
+            color: #b42318;
+            background: #fef3f2;
+        }
+
+        .links {
+            margin-top: 18px;
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .links a {
+            color: #635bff;
+            text-decoration: none;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .header,
+            .workspace {
+                grid-template-columns: 1fr;
+                display: grid;
+            }
+
+            .card {
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <header class="header">
+            <div>
+                <p class="eyebrow">Your New Face</p>
+                <h1>Новый образ по фото</h1>
+            </div>
+            <p class="subtitle">
+                Загрузите портрет, выберите желаемый возраст и получите обновлённое изображение.
+            </p>
+        </header>
+
+        <section class="workspace">
+            <article class="card">
+                <h2>Исходное фото</h2>
+                <label class="image-box" id="dropZone" for="fileInput">
+                    <div class="placeholder" id="uploadPlaceholder">
+                        <strong>Перетащите фото сюда</strong>
+                        <span>или нажмите, чтобы выбрать файл. JPG, PNG, WEBP до 5 MB.</span>
+                    </div>
+                    <img id="sourcePreview" alt="Исходное фото" hidden>
+                </label>
+                <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp">
+
+                <div class="age-control">
+                    <label for="targetAge">Желаемый возраст</label>
+                    <input id="targetAge" type="range" min="20" max="60" step="1" value="20">
+                    <div class="age-value">Возраст: <span id="targetAgeValue">20</span></div>
+                </div>
+
+                <div class="controls">
+                    <div class="file-name" id="fileName">Файл не выбран</div>
+                    <button id="processBtn" disabled>Обработать</button>
+                </div>
+                <div class="status" id="status">Готов к загрузке</div>
+            </article>
+
+            <article class="card">
+                <h2>Результат</h2>
+                <div class="image-box">
+                    <div class="placeholder" id="resultPlaceholder">
+                        <strong>Здесь появится обработанное фото</strong>
+                        <span>После завершения обработки результат загрузится автоматически.</span>
+                    </div>
+                    <img id="resultPreview" alt="Обработанное фото" hidden>
+                </div>
+            </article>
+        </section>
+    </main>
+
+<script>
+const MAX_UPLOAD_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_SOURCE_FILE_SIZE = 20 * 1024 * 1024;
+const MAX_IMAGE_SIDE = 1600;
+const IMAGE_QUALITY = 0.9;
+const MAX_ATTEMPTS = 90;
+const POLL_INTERVAL_MS = 1000;
+
+const dropZone = document.getElementById("dropZone");
+const fileInput = document.getElementById("fileInput");
+const sourcePreview = document.getElementById("sourcePreview");
+const resultPreview = document.getElementById("resultPreview");
+const uploadPlaceholder = document.getElementById("uploadPlaceholder");
+const resultPlaceholder = document.getElementById("resultPlaceholder");
+const fileName = document.getElementById("fileName");
+const processBtn = document.getElementById("processBtn");
+const statusBox = document.getElementById("status");
+const targetAge = document.getElementById("targetAge");
+const targetAgeValue = document.getElementById("targetAgeValue");
+
+let selectedFile = null;
+let pollTimer = null;
+let sourcePreviewUrl = null;
+
+function setStatus(text, type = "default") {
+    statusBox.textContent = text;
+    statusBox.classList.toggle("is-loading", type === "loading");
+    statusBox.classList.toggle("is-error", type === "error");
+}
+
+function resetResult() {
+    resultPreview.hidden = true;
+    resultPreview.removeAttribute("src");
+    resultPlaceholder.hidden = false;
+}
+
+function setQueueStatus(task) {
+    if (task.status === "PROCESSING") {
+        setStatus("Ваше фото сейчас обрабатывается...", "loading");
+        return;
+    }
+
+    if (task.status === "PENDING" && Number.isInteger(task.queue_position)) {
+        if (task.queue_ahead > 0) {
+            setStatus(`Вы в очереди: №${task.queue_position}. Перед вами: ${task.queue_ahead}.`, "loading");
+        } else {
+            setStatus(`Вы в очереди: №${task.queue_position}. Скоро начнём обработку.`, "loading");
+        }
+        return;
+    }
+
+    setStatus("Ожидаем начала обработки...", "loading");
+}
+
+async function readJsonResponse(response) {
+    const text = await response.text();
+    try {
+        return text ? JSON.parse(text) : {};
+    } catch {
+        throw new Error("Сервис временно недоступен. Обновите страницу и попробуйте ещё раз.");
+    }
+}
+
+function setSourcePreview(file) {
+    if (sourcePreviewUrl) {
+        URL.revokeObjectURL(sourcePreviewUrl);
+    }
+
+    sourcePreviewUrl = URL.createObjectURL(file);
+    sourcePreview.src = sourcePreviewUrl;
+    sourcePreview.hidden = false;
+    uploadPlaceholder.hidden = true;
+}
+
+function loadImage(file) {
+    return new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(file);
+        const image = new Image();
+
+        image.onload = () => {
+            URL.revokeObjectURL(url);
+            resolve(image);
+        };
+        image.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject(new Error("Не удалось прочитать изображение."));
+        };
+        image.src = url;
+    });
+}
+
+async function prepareImageForUpload(file) {
+    const image = await loadImage(file);
+    const scale = Math.min(1, MAX_IMAGE_SIDE / Math.max(image.naturalWidth, image.naturalHeight));
+
+    if (scale === 1 && file.size <= MAX_UPLOAD_FILE_SIZE) {
+        return file;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(image.naturalWidth * scale);
+    canvas.height = Math.round(image.naturalHeight * scale);
+
+    const context = canvas.getContext("2d");
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    const outputType = file.type === "image/png" ? "image/png" : "image/jpeg";
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, outputType, IMAGE_QUALITY));
+
+    if (!blob) {
+        throw new Error("Не удалось подготовить изображение к загрузке.");
+    }
+
+    const extension = outputType === "image/png" ? "png" : "jpg";
+    const name = file.name.replace(/\.[^.]+$/, `.${extension}`);
+    return new File([blob], name, { type: outputType, lastModified: Date.now() });
+}
+
+async function selectFile(file) {
+    if (!file) return;
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+        setStatus("Можно загрузить только JPG, PNG или WEBP.", "error");
+        return;
+    }
+
+    if (file.size > MAX_SOURCE_FILE_SIZE) {
+        setStatus("Файл слишком большой. Максимальный размер исходника: 20 MB.", "error");
+        return;
+    }
+
+    try {
+        processBtn.disabled = true;
+    setStatus("Подготавливаем фото...", "loading");
+        resetResult();
+        setSourcePreview(file);
+
+        selectedFile = await prepareImageForUpload(file);
+        if (selectedFile.size > MAX_UPLOAD_FILE_SIZE) {
+            throw new Error("После сжатия файл всё ещё больше 5 MB. Попробуйте фото поменьше.");
+        }
+
+        const originalSize = (file.size / 1024 / 1024).toFixed(2);
+        const uploadSize = (selectedFile.size / 1024 / 1024).toFixed(2);
+        fileName.textContent = `${file.name} (${originalSize} MB → ${uploadSize} MB)`;
+        processBtn.disabled = false;
+        setStatus("Файл выбран и вписан без обрезки. Можно запускать обработку.");
+    } catch (error) {
+        selectedFile = null;
+        fileName.textContent = "Файл не выбран";
+        processBtn.disabled = true;
+        setStatus(error.message, "error");
+    }
+}
+
+fileInput.addEventListener("change", () => {
+    selectFile(fileInput.files[0]);
+});
+
+targetAge.addEventListener("input", () => {
+    targetAgeValue.textContent = targetAge.value;
+});
+
+["dragenter", "dragover"].forEach((eventName) => {
+    dropZone.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        dropZone.classList.add("is-dragover");
+    });
+});
+
+["dragleave", "drop"].forEach((eventName) => {
+    dropZone.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        dropZone.classList.remove("is-dragover");
+    });
+});
+
+dropZone.addEventListener("drop", (event) => {
+    selectFile(event.dataTransfer.files[0]);
+});
+
+processBtn.addEventListener("click", async () => {
+    if (!selectedFile) return;
+
+    clearTimeout(pollTimer);
+    processBtn.disabled = true;
+    resetResult();
+    setStatus("Загружаем фото...", "loading");
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("target_age", targetAge.value);
+
+    try {
+        const response = await fetch("/api/tasks/upload", {
+            method: "POST",
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const error = await readJsonResponse(response);
+            throw new Error(error.detail || "Ошибка загрузки файла");
+        }
+
+        const task = await readJsonResponse(response);
+        setQueueStatus(task);
+        pollTask(task.task_id, 0);
+    } catch (error) {
+        processBtn.disabled = false;
+        setStatus(error.message, "error");
+    }
+});
+
+async function pollTask(taskId, attempt) {
+    if (attempt > MAX_ATTEMPTS) {
+        processBtn.disabled = false;
+        setStatus("Время ожидания истекло. Попробуйте ещё раз.", "error");
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/tasks/${taskId}`);
+        if (!response.ok) {
+            const error = await readJsonResponse(response);
+            throw new Error(error.detail || "Не удалось получить статус обработки.");
+        }
+
+        const task = await readJsonResponse(response);
+
+        if (task.status === "SUCCESS") {
+            resultPreview.src = `${task.result.result_url}?t=${Date.now()}`;
+            resultPreview.hidden = false;
+            resultPlaceholder.hidden = true;
+            processBtn.disabled = false;
+            setStatus("Готово. Результат загружен.");
+            return;
+        }
+
+        if (task.status === "FAILURE") {
+            processBtn.disabled = false;
+            setStatus(task.result?.error || "Не удалось обработать фото.", "error");
+            return;
+        }
+
+        setQueueStatus(task);
+        pollTimer = setTimeout(() => pollTask(taskId, attempt + 1), POLL_INTERVAL_MS);
+    } catch (error) {
+        processBtn.disabled = false;
+        setStatus(error.message, "error");
+    }
+}
+</script>
+</body>
+</html>

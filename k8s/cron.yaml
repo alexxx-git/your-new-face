@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: daily-task
+spec:
+  schedule: "0 2 * * *"  # каждый день в 2:00 ночи
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: daily-task
+              image: yournewface_api:latest
+              command: ["python", "api/cron_task.py"]
+          restartPolicy: OnFailure
