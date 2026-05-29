@@ -1,0 +1,5 @@
+{
+  "age": 70,
+  "positive": "portrait photo of elderly {gender}, age {age}, realistic elderly face, very old face, deep wrinkles, forehead wrinkles, crow's feet, nasolabial folds, under eye bags, aged skin texture, sagging skin, gray hair",
+  "negative": "young, youthful face, smooth skin, baby face, teenager, lowres, blurry, deformed, disfigured, bad anatomy, watermark, jpeg artifacts, plastic skin, cartoon, 3d render"
+}

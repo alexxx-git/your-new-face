@@ -62,8 +62,14 @@ services:
       - YNF_DEVICE=cuda
       - YNF_LORA_MODE=custom
       - YNF_INSIGHTFACE_ROOT=/yournewface/new_face
+      - YNF_SVDMIX_USE_PRECOMPUTED=true
+      - YNF_SVDMIX_PRECOMPUTED_DIR=/yournewface/new_face/models/Lora/svdmix_fused_age_grid
+      - YNF_SVDMIX_AGE_GRID_MIN=20
+      - YNF_SVDMIX_AGE_GRID_MAX=60
+      - YNF_SVDMIX_AGE_GRID_STEP=2.5
     volumes:
       - D:/Projects/models:/yournewface/new_face/models:ro
+      - ./new_face/data/svdmix:/yournewface/new_face/data/svdmix:ro
     restart: always
     working_dir: /yournewface/api
     entrypoint: celery -A celery_app worker --loglevel=info --pool=solo --concurrency=1

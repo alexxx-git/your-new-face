@@ -12,6 +12,7 @@
         body {
             margin: 0;
             min-height: 100vh;
+            overflow-x: hidden;
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             color: #172033;
             background:
@@ -95,12 +96,10 @@
 
         .image-box img {
             display: block;
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
-            object-position: center;
+            object-position: center center;
         }
 
         .placeholder {
@@ -207,14 +206,42 @@
         }
 
         @media (max-width: 900px) {
+            .page {
+                width: 100%;
+                padding: 20px 0;
+            }
+
             .header,
             .workspace {
                 grid-template-columns: 1fr;
                 display: grid;
+                gap: 16px;
             }
 
             .card {
+                width: calc(100vw - 24px);
+                max-width: 520px;
+                margin: 0 auto;
                 min-height: auto;
+                padding: 14px;
+                border-radius: 22px;
+            }
+
+            .image-box {
+                width: 100%;
+                max-width: calc(100vw - 52px);
+                margin: 0 auto;
+                aspect-ratio: 3 / 4;
+                border-radius: 18px;
+            }
+
+            .controls {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
             }
         }
     </style>
@@ -292,6 +319,18 @@ const targetAgeValue = document.getElementById("targetAgeValue");
 let selectedFile = null;
 let pollTimer = null;
 let sourcePreviewUrl = null;
+
+function appBasePath() {
+    const path = window.location.pathname;
+    if (path.endsWith("/")) {
+        return path;
+    }
+    return path.replace(/\/[^/]*$/, "/");
+}
+
+function apiUrl(path) {
+    return new URL(path.replace(/^\//, ""), window.location.origin + appBasePath()).toString();
+}
 
 function setStatus(text, type = "default") {
     statusBox.textContent = text;
@@ -465,7 +504,7 @@ processBtn.addEventListener("click", async () => {
     formData.append("target_age", targetAge.value);
 
     try {
-        const response = await fetch("/api/tasks/upload", {
+        const response = await fetch(apiUrl("/api/tasks/upload"), {
             method: "POST",
             body: formData,
         });
@@ -492,7 +531,7 @@ async function pollTask(taskId, attempt) {
     }
 
     try {
-        const response = await fetch(`/api/tasks/${taskId}`);
+        const response = await fetch(apiUrl(`/api/tasks/${taskId}`));
         if (!response.ok) {
             const error = await readJsonResponse(response);
             throw new Error(error.detail || "Не удалось получить статус обработки.");
@@ -501,7 +540,7 @@ async function pollTask(taskId, attempt) {
         const task = await readJsonResponse(response);
 
         if (task.status === "SUCCESS") {
-            resultPreview.src = `${task.result.result_url}?t=${Date.now()}`;
+            resultPreview.src = `${apiUrl(task.result.result_url)}?t=${Date.now()}`;
             resultPreview.hidden = false;
             resultPlaceholder.hidden = true;
             processBtn.disabled = false;

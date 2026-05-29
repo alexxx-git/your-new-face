@@ -1,0 +1,65 @@
+{
+  "20_24": {
+    "age_min": 20,
+    "age_max": 24,
+    "anchor_age": 22,
+    "positive": "realistic portrait photo, young adult age 22, fresh face, smooth firm skin, full cheeks, bright eyes, clean jawline, dense hair, natural hairline, no wrinkles, no gray hair",
+    "negative": "old, elderly, middle-aged, wrinkles, eye bags, sagging skin, gray hair, white hair, receding hairline, bald, thinning hair, tired eyes, plastic skin, cartoon, 3d render, lowres, blurry, deformed, watermark"
+  },
+  "25_29": {
+    "age_min": 25,
+    "age_max": 29,
+    "anchor_age": 27,
+    "positive": "realistic portrait photo, young adult age 27, youthful adult face, smooth healthy skin, firm skin, defined jawline, clear eyes, dense hair, natural hairline, minimal lines, no gray hair",
+    "negative": "teenager, baby face, old, elderly, wrinkles, deep lines, eye bags, sagging skin, gray hair, white hair, receding hairline, bald, thinning hair, plastic skin, cartoon, 3d render, lowres, blurry, deformed, watermark"
+  },
+  "30_34": {
+    "age_min": 30,
+    "age_max": 34,
+    "anchor_age": 32,
+    "positive": "realistic portrait photo, adult age 32, mature young adult face, healthy textured skin, slight expression lines, firm skin, clear eyes, natural adult features, healthy hair, natural hairline",
+    "negative": "teenager, baby face, elderly, old, deep wrinkles, heavy eye bags, sagging skin, gray hair, white hair, bald, severe receding hairline, plastic skin, cartoon, 3d render, lowres, blurry, deformed, watermark"
+  },
+  "35_39": {
+    "age_min": 35,
+    "age_max": 39,
+    "anchor_age": 37,
+    "positive": "realistic portrait photo, adult age 37, mature face, natural skin texture, mild forehead lines, mild crow's feet, subtle smile lines, slight tired eyes, natural hairline, little gray hair",
+    "negative": "teenager, baby face, overly smooth skin, elderly, old, deep wrinkles, heavy sagging skin, strong gray hair, white hair, bald, severe balding, plastic skin, cartoon, 3d render, lowres, blurry, deformed, watermark"
+  },
+  "40_44": {
+    "age_min": 40,
+    "age_max": 44,
+    "anchor_age": 42,
+    "positive": "realistic portrait photo, middle-aged adult age 42, mature face, natural skin texture, forehead lines, smile lines, mild crow's feet, mild eye bags, slight skin laxity, early gray hair, slight receding hairline",
+    "negative": "teenager, young adult, baby face, smooth skin, elderly, very old, deep wrinkles, heavy sagging skin, fully gray hair, white hair, bald, severe balding, plastic skin, cartoon, 3d render, lowres, blurry, deformed, watermark"
+  },
+  "45_49": {
+    "age_min": 45,
+    "age_max": 49,
+    "anchor_age": 47,
+    "positive": "realistic portrait photo, middle-aged age 47, mature face, visible wrinkles, forehead lines, crow's feet, smile lines, eye bags, mature skin texture, slight sagging, some gray hair, thinning hair possible",
+    "negative": "teenager, young adult, youthful face, baby face, smooth skin, no wrinkles, very old, extreme wrinkles, heavy sagging, fully white hair, plastic skin, cartoon, 3d render, lowres, blurry, deformed, watermark"
+  },
+  "50_54": {
+    "age_min": 50,
+    "age_max": 54,
+    "anchor_age": 52,
+    "positive": "realistic portrait photo, older middle-aged age 52, clear aging, deeper forehead wrinkles, crow's feet, deep smile lines, eye bags, aged skin texture, mild sagging, gray hair, receding hairline, thinning hair possible",
+    "negative": "teenager, young adult, youthful face, baby face, smooth skin, no wrinkles, firm cheeks, very old, extreme sagging, fully white hair, plastic skin, cartoon, 3d render, lowres, blurry, deformed, watermark"
+  },
+  "55_59": {
+    "age_min": 55,
+    "age_max": 59,
+    "anchor_age": 57,
+    "positive": "realistic portrait photo, older adult age 57, aged face, deep forehead wrinkles, crow's feet, deep smile lines, eye bags, sagging skin, rough skin texture, hollow cheeks, gray hair, receding hairline, thinning hair",
+    "negative": "teenager, young adult, youthful face, baby face, smooth skin, firm skin, no wrinkles, full cheeks, extreme frailty, plastic skin, cartoon, 3d render, lowres, blurry, deformed, watermark"
+  },
+  "60_": {
+    "age_min": 60,
+    "age_max": null,
+    "anchor_age": 65,
+    "positive": "realistic portrait photo, elderly adult age 65, old face, deep wrinkles, deep crow's feet, deep smile lines, eye bags, sagging loose skin, rough aged skin, hollow cheeks, gray or white hair, receding hairline, bald possible",
+    "negative": "teenager, young adult, middle-aged only, youthful face, baby face, smooth skin, firm skin, no wrinkles, full cheeks, dense dark hair, perfect hairline, plastic skin, cartoon, 3d render, lowres, blurry, deformed, watermark"
+  }
+}

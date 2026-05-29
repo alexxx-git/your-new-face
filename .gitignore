@@ -24,7 +24,7 @@ venv
 .env
 .env.*
 !.env.example
-new_face/data/
+
 
 # Data, models, generated artifacts
 data/face_dataset/

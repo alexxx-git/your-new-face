@@ -361,8 +361,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 24
+        "x": 12,
+        "y": 16
       },
       "id": 5,
       "options": {
@@ -451,7 +451,7 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
+        "x": 0,
         "y": 24
       },
       "id": 6,
@@ -541,8 +541,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 32
+        "x": 12,
+        "y": 24
       },
       "id": 7,
       "options": {
@@ -653,7 +653,7 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
+        "x": 0,
         "y": 32
       },
       "id": 8,
@@ -765,8 +765,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 40
+        "x": 12,
+        "y": 32
       },
       "id": 9,
       "options": {
@@ -840,6 +840,6 @@
   "timezone": "browser",
   "title": "Container Basics",
   "uid": "your-new-face-overview",
-  "version": 8,
+  "version": 9,
   "weekStart": ""
 }

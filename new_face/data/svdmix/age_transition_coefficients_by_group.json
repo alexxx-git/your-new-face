@@ -1,0 +1,6050 @@
+{
+  "version": 1,
+  "purpose": "Initial hypothesis map for age group to age group img2img face transformation coefficients.",
+  "important_note": "These are starting points, not universal truth. Validate per source image with cosine_similarity, age error, LPIPS, and visual review.",
+  "parameters_included": {
+    "strength": "img2img denoise strength; higher changes age more but risks identity drift",
+    "ip_adapter_scale": "face identity/reference lock; higher preserves identity but can resist age change",
+    "cfg": "prompt guidance; higher follows age prompt more but can introduce artifacts",
+    "custom_lora_scale": "current custom LoRA adapter strength",
+    "steps": "fixed inference steps; always use 20 for this coefficient map",
+    "prompt_weight": "which prompt style should be used with this transition"
+  },
+  "groups": {
+    "20_24": {
+      "age_min": 20,
+      "age_max": 24,
+      "anchor_age": 22
+    },
+    "25_29": {
+      "age_min": 25,
+      "age_max": 29,
+      "anchor_age": 27
+    },
+    "30_34": {
+      "age_min": 30,
+      "age_max": 34,
+      "anchor_age": 32
+    },
+    "35_39": {
+      "age_min": 35,
+      "age_max": 39,
+      "anchor_age": 37
+    },
+    "40_44": {
+      "age_min": 40,
+      "age_max": 44,
+      "anchor_age": 42
+    },
+    "45_49": {
+      "age_min": 45,
+      "age_max": 49,
+      "anchor_age": 47
+    },
+    "50_54": {
+      "age_min": 50,
+      "age_max": 54,
+      "anchor_age": 52
+    },
+    "55_59": {
+      "age_min": 55,
+      "age_max": 59,
+      "anchor_age": 57
+    },
+    "60_": {
+      "age_min": 60,
+      "age_max": null,
+      "anchor_age": 65
+    }
+  },
+  "global_guardrails": {
+    "keep_fixed_for_comparison": [
+      "model",
+      "scheduler",
+      "resolution",
+      "seed for scout",
+      "source image crop/resize policy",
+      "prompt profile version"
+    ],
+    "selection_order": [
+      "filter obviously broken images visually if possible",
+      "keep cosine_similarity above a task-specific floor",
+      "minimize age absolute error / delta error",
+      "use LPIPS and composite_score as tie breakers",
+      "confirm best preset on several seeds"
+    ],
+    "suggested_cosine_floor": {
+      "same_or_small_delta": 0.55,
+      "medium_delta": 0.45,
+      "large_delta": 0.35
+    }
+  },
+  "coefficients": {
+    "male": {
+      "20_24": {
+        "source_age_min": 20,
+        "source_age_max": 24,
+        "source_anchor_age": 22,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": 15,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.5,
+              "ip_adapter_scale": 0.7,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.55,
+                0.85
+              ],
+              "cfg": [
+                6.4,
+                8.8
+              ],
+              "custom_lora_scale": [
+                0.55,
+                0.95
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": 20,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.5,
+              "ip_adapter_scale": 0.7,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.64
+              ],
+              "ip_adapter_scale": [
+                0.52,
+                0.88
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.5,
+                1.0
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 25,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.62,
+              "ip_adapter_scale": 0.54,
+              "cfg": 8.8,
+              "custom_lora_scale": 0.95,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.48,
+                0.76
+              ],
+              "ip_adapter_scale": [
+                0.36,
+                0.72
+              ],
+              "cfg": [
+                7.3,
+                10.3
+              ],
+              "custom_lora_scale": [
+                0.7,
+                1.2
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 30,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.62,
+              "ip_adapter_scale": 0.54,
+              "cfg": 8.8,
+              "custom_lora_scale": 0.95,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.48,
+                0.76
+              ],
+              "ip_adapter_scale": [
+                0.36,
+                0.72
+              ],
+              "cfg": [
+                7.3,
+                10.3
+              ],
+              "custom_lora_scale": [
+                0.7,
+                1.2
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 35,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.72,
+              "ip_adapter_scale": 0.4,
+              "cfg": 10.0,
+              "custom_lora_scale": 1.15,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.54,
+                0.85
+              ],
+              "ip_adapter_scale": [
+                0.2,
+                0.62
+              ],
+              "cfg": [
+                8.0,
+                12.0
+              ],
+              "custom_lora_scale": [
+                0.85,
+                1.45
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 43,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.72,
+              "ip_adapter_scale": 0.4,
+              "cfg": 10.0,
+              "custom_lora_scale": 1.15,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.54,
+                0.85
+              ],
+              "ip_adapter_scale": [
+                0.2,
+                0.62
+              ],
+              "cfg": [
+                8.0,
+                12.0
+              ],
+              "custom_lora_scale": [
+                0.85,
+                1.45
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "25_29": {
+        "source_age_min": 25,
+        "source_age_max": 29,
+        "source_anchor_age": 27,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": 15,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.5,
+              "ip_adapter_scale": 0.7,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.55,
+                0.85
+              ],
+              "cfg": [
+                6.4,
+                8.8
+              ],
+              "custom_lora_scale": [
+                0.55,
+                0.95
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 20,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.5,
+              "ip_adapter_scale": 0.7,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.64
+              ],
+              "ip_adapter_scale": [
+                0.52,
+                0.88
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.5,
+                1.0
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 25,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.62,
+              "ip_adapter_scale": 0.54,
+              "cfg": 8.8,
+              "custom_lora_scale": 0.95,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.48,
+                0.76
+              ],
+              "ip_adapter_scale": [
+                0.36,
+                0.72
+              ],
+              "cfg": [
+                7.3,
+                10.3
+              ],
+              "custom_lora_scale": [
+                0.7,
+                1.2
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 30,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.62,
+              "ip_adapter_scale": 0.54,
+              "cfg": 8.8,
+              "custom_lora_scale": 0.95,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.48,
+                0.76
+              ],
+              "ip_adapter_scale": [
+                0.36,
+                0.72
+              ],
+              "cfg": [
+                7.3,
+                10.3
+              ],
+              "custom_lora_scale": [
+                0.7,
+                1.2
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 38,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.72,
+              "ip_adapter_scale": 0.4,
+              "cfg": 10.0,
+              "custom_lora_scale": 1.15,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.54,
+                0.85
+              ],
+              "ip_adapter_scale": [
+                0.2,
+                0.62
+              ],
+              "cfg": [
+                8.0,
+                12.0
+              ],
+              "custom_lora_scale": [
+                0.85,
+                1.45
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "30_34": {
+        "source_age_min": 30,
+        "source_age_max": 34,
+        "source_anchor_age": 32,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 15,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.5,
+              "ip_adapter_scale": 0.7,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.55,
+                0.85
+              ],
+              "cfg": [
+                6.4,
+                8.8
+              ],
+              "custom_lora_scale": [
+                0.55,
+                0.95
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 20,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.5,
+              "ip_adapter_scale": 0.7,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.64
+              ],
+              "ip_adapter_scale": [
+                0.52,
+                0.88
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.5,
+                1.0
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 25,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.62,
+              "ip_adapter_scale": 0.54,
+              "cfg": 8.8,
+              "custom_lora_scale": 0.95,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.48,
+                0.76
+              ],
+              "ip_adapter_scale": [
+                0.36,
+                0.72
+              ],
+              "cfg": [
+                7.3,
+                10.3
+              ],
+              "custom_lora_scale": [
+                0.7,
+                1.2
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 33,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.72,
+              "ip_adapter_scale": 0.4,
+              "cfg": 10.0,
+              "custom_lora_scale": 1.15,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.54,
+                0.85
+              ],
+              "ip_adapter_scale": [
+                0.2,
+                0.62
+              ],
+              "cfg": [
+                8.0,
+                12.0
+              ],
+              "custom_lora_scale": [
+                0.85,
+                1.45
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "35_39": {
+        "source_age_min": 35,
+        "source_age_max": 39,
+        "source_anchor_age": 37,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -15,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.72,
+              "cfg": 7.2,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.57,
+                0.87
+              ],
+              "cfg": [
+                6.0,
+                8.4
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 15,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.5,
+              "ip_adapter_scale": 0.7,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.55,
+                0.85
+              ],
+              "cfg": [
+                6.4,
+                8.8
+              ],
+              "custom_lora_scale": [
+                0.55,
+                0.95
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 20,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.5,
+              "ip_adapter_scale": 0.7,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.64
+              ],
+              "ip_adapter_scale": [
+                0.52,
+                0.88
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.5,
+                1.0
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 28,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.62,
+              "ip_adapter_scale": 0.54,
+              "cfg": 8.8,
+              "custom_lora_scale": 0.95,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.48,
+                0.76
+              ],
+              "ip_adapter_scale": [
+                0.36,
+                0.72
+              ],
+              "cfg": [
+                7.3,
+                10.3
+              ],
+              "custom_lora_scale": [
+                0.7,
+                1.2
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "40_44": {
+        "source_age_min": 40,
+        "source_age_max": 44,
+        "source_anchor_age": 42,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -20,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.72,
+              "cfg": 7.2,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.32,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.54,
+                0.9
+              ],
+              "cfg": [
+                5.7,
+                8.7
+              ],
+              "custom_lora_scale": [
+                0.3,
+                0.8
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -15,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.72,
+              "cfg": 7.2,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.57,
+                0.87
+              ],
+              "cfg": [
+                6.0,
+                8.4
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 15,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.5,
+              "ip_adapter_scale": 0.7,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.55,
+                0.85
+              ],
+              "cfg": [
+                6.4,
+                8.8
+              ],
+              "custom_lora_scale": [
+                0.55,
+                0.95
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 23,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.62,
+              "ip_adapter_scale": 0.54,
+              "cfg": 8.8,
+              "custom_lora_scale": 0.95,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.48,
+                0.76
+              ],
+              "ip_adapter_scale": [
+                0.36,
+                0.72
+              ],
+              "cfg": [
+                7.3,
+                10.3
+              ],
+              "custom_lora_scale": [
+                0.7,
+                1.2
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "45_49": {
+        "source_age_min": 45,
+        "source_age_max": 49,
+        "source_anchor_age": 47,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -25,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.58,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.65,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.4,
+                0.76
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.9
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -20,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.72,
+              "cfg": 7.2,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.32,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.54,
+                0.9
+              ],
+              "cfg": [
+                5.7,
+                8.7
+              ],
+              "custom_lora_scale": [
+                0.3,
+                0.8
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -15,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.72,
+              "cfg": 7.2,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.57,
+                0.87
+              ],
+              "cfg": [
+                6.0,
+                8.4
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 18,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.5,
+              "ip_adapter_scale": 0.7,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.64
+              ],
+              "ip_adapter_scale": [
+                0.52,
+                0.88
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.5,
+                1.0
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "50_54": {
+        "source_age_min": 50,
+        "source_age_max": 54,
+        "source_anchor_age": 52,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -30,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.58,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.65,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.4,
+                0.76
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.9
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -25,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.58,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.65,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.4,
+                0.76
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.9
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -20,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.72,
+              "cfg": 7.2,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.32,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.54,
+                0.9
+              ],
+              "cfg": [
+                5.7,
+                8.7
+              ],
+              "custom_lora_scale": [
+                0.3,
+                0.8
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": -15,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.72,
+              "cfg": 7.2,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.57,
+                0.87
+              ],
+              "cfg": [
+                6.0,
+                8.4
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 13,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.5,
+              "ip_adapter_scale": 0.7,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.55,
+                0.85
+              ],
+              "cfg": [
+                6.4,
+                8.8
+              ],
+              "custom_lora_scale": [
+                0.55,
+                0.95
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "55_59": {
+        "source_age_min": 55,
+        "source_age_max": 59,
+        "source_anchor_age": 57,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -35,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.6,
+              "ip_adapter_scale": 0.48,
+              "cfg": 8.0,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.42,
+                0.78
+              ],
+              "ip_adapter_scale": [
+                0.26,
+                0.7
+              ],
+              "cfg": [
+                6.0,
+                10.0
+              ],
+              "custom_lora_scale": [
+                0.45,
+                1.05
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -30,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.58,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.65,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.4,
+                0.76
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.9
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -25,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.58,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.65,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.4,
+                0.76
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.9
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": -20,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.72,
+              "cfg": 7.2,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.32,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.54,
+                0.9
+              ],
+              "cfg": [
+                5.7,
+                8.7
+              ],
+              "custom_lora_scale": [
+                0.3,
+                0.8
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": -15,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.72,
+              "cfg": 7.2,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.57,
+                0.87
+              ],
+              "cfg": [
+                6.0,
+                8.4
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 8,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.36,
+              "ip_adapter_scale": 0.84,
+              "cfg": 6.8,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.26,
+                0.46
+              ],
+              "ip_adapter_scale": [
+                0.69,
+                0.99
+              ],
+              "cfg": [
+                5.6,
+                8.0
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "male aging: gray hair, receding hairline, thinning/balding cues can help",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "60_": {
+        "source_age_min": 60,
+        "source_age_max": null,
+        "source_anchor_age": 65,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -43,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.6,
+              "ip_adapter_scale": 0.48,
+              "cfg": 8.0,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.42,
+                0.78
+              ],
+              "ip_adapter_scale": [
+                0.26,
+                0.7
+              ],
+              "cfg": [
+                6.0,
+                10.0
+              ],
+              "custom_lora_scale": [
+                0.45,
+                1.05
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -38,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.6,
+              "ip_adapter_scale": 0.48,
+              "cfg": 8.0,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.42,
+                0.78
+              ],
+              "ip_adapter_scale": [
+                0.26,
+                0.7
+              ],
+              "cfg": [
+                6.0,
+                10.0
+              ],
+              "custom_lora_scale": [
+                0.45,
+                1.05
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -33,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.6,
+              "ip_adapter_scale": 0.48,
+              "cfg": 8.0,
+              "custom_lora_scale": 0.75,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.42,
+                0.78
+              ],
+              "ip_adapter_scale": [
+                0.26,
+                0.7
+              ],
+              "cfg": [
+                6.0,
+                10.0
+              ],
+              "custom_lora_scale": [
+                0.45,
+                1.05
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": -28,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.58,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.65,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.4,
+                0.76
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.9
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": -23,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.58,
+              "cfg": 7.6,
+              "custom_lora_scale": 0.65,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.4,
+                0.76
+              ],
+              "cfg": [
+                6.1,
+                9.1
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.9
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": -18,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.72,
+              "cfg": 7.2,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.32,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.54,
+                0.9
+              ],
+              "cfg": [
+                5.7,
+                8.7
+              ],
+              "custom_lora_scale": [
+                0.3,
+                0.8
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": -13,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.72,
+              "cfg": 7.2,
+              "custom_lora_scale": 0.55,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.57,
+                0.87
+              ],
+              "cfg": [
+                6.0,
+                8.4
+              ],
+              "custom_lora_scale": [
+                0.35,
+                0.75
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": -8,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.86,
+              "cfg": 6.7,
+              "custom_lora_scale": 0.45,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.71,
+                1.01
+              ],
+              "cfg": [
+                5.5,
+                7.9
+              ],
+              "custom_lora_scale": [
+                0.25,
+                0.65
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "male rejuvenation: suppress gray hair/receding hairline/balding in negative prompt",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      }
+    },
+    "female": {
+      "20_24": {
+        "source_age_min": 20,
+        "source_age_max": 24,
+        "source_anchor_age": 22,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": 15,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.53,
+              "ip_adapter_scale": 0.68,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.8,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.43,
+                0.63
+              ],
+              "ip_adapter_scale": [
+                0.53,
+                0.83
+              ],
+              "cfg": [
+                6.6,
+                9.0
+              ],
+              "custom_lora_scale": [
+                0.6,
+                1.0
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": 20,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.53,
+              "ip_adapter_scale": 0.68,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.8,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.39,
+                0.67
+              ],
+              "ip_adapter_scale": [
+                0.5,
+                0.86
+              ],
+              "cfg": [
+                6.3,
+                9.3
+              ],
+              "custom_lora_scale": [
+                0.55,
+                1.05
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 25,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.65,
+              "ip_adapter_scale": 0.52,
+              "cfg": 9.0,
+              "custom_lora_scale": 1.0,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.51,
+                0.79
+              ],
+              "ip_adapter_scale": [
+                0.34,
+                0.7
+              ],
+              "cfg": [
+                7.5,
+                10.5
+              ],
+              "custom_lora_scale": [
+                0.75,
+                1.25
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 30,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.65,
+              "ip_adapter_scale": 0.52,
+              "cfg": 9.0,
+              "custom_lora_scale": 1.0,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.51,
+                0.79
+              ],
+              "ip_adapter_scale": [
+                0.34,
+                0.7
+              ],
+              "cfg": [
+                7.5,
+                10.5
+              ],
+              "custom_lora_scale": [
+                0.75,
+                1.25
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 35,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.75,
+              "ip_adapter_scale": 0.38,
+              "cfg": 10.2,
+              "custom_lora_scale": 1.2,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.57,
+                0.85
+              ],
+              "ip_adapter_scale": [
+                0.2,
+                0.6
+              ],
+              "cfg": [
+                8.2,
+                12.0
+              ],
+              "custom_lora_scale": [
+                0.9,
+                1.5
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 43,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.75,
+              "ip_adapter_scale": 0.38,
+              "cfg": 10.2,
+              "custom_lora_scale": 1.2,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.57,
+                0.85
+              ],
+              "ip_adapter_scale": [
+                0.2,
+                0.6
+              ],
+              "cfg": [
+                8.2,
+                12.0
+              ],
+              "custom_lora_scale": [
+                0.9,
+                1.5
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "25_29": {
+        "source_age_min": 25,
+        "source_age_max": 29,
+        "source_anchor_age": 27,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": 15,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.53,
+              "ip_adapter_scale": 0.68,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.8,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.43,
+                0.63
+              ],
+              "ip_adapter_scale": [
+                0.53,
+                0.83
+              ],
+              "cfg": [
+                6.6,
+                9.0
+              ],
+              "custom_lora_scale": [
+                0.6,
+                1.0
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 20,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.53,
+              "ip_adapter_scale": 0.68,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.8,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.39,
+                0.67
+              ],
+              "ip_adapter_scale": [
+                0.5,
+                0.86
+              ],
+              "cfg": [
+                6.3,
+                9.3
+              ],
+              "custom_lora_scale": [
+                0.55,
+                1.05
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 25,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.65,
+              "ip_adapter_scale": 0.52,
+              "cfg": 9.0,
+              "custom_lora_scale": 1.0,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.51,
+                0.79
+              ],
+              "ip_adapter_scale": [
+                0.34,
+                0.7
+              ],
+              "cfg": [
+                7.5,
+                10.5
+              ],
+              "custom_lora_scale": [
+                0.75,
+                1.25
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 30,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.65,
+              "ip_adapter_scale": 0.52,
+              "cfg": 9.0,
+              "custom_lora_scale": 1.0,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.51,
+                0.79
+              ],
+              "ip_adapter_scale": [
+                0.34,
+                0.7
+              ],
+              "cfg": [
+                7.5,
+                10.5
+              ],
+              "custom_lora_scale": [
+                0.75,
+                1.25
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 38,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.75,
+              "ip_adapter_scale": 0.38,
+              "cfg": 10.2,
+              "custom_lora_scale": 1.2,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.57,
+                0.85
+              ],
+              "ip_adapter_scale": [
+                0.2,
+                0.6
+              ],
+              "cfg": [
+                8.2,
+                12.0
+              ],
+              "custom_lora_scale": [
+                0.9,
+                1.5
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "30_34": {
+        "source_age_min": 30,
+        "source_age_max": 34,
+        "source_anchor_age": 32,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 15,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.53,
+              "ip_adapter_scale": 0.68,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.8,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.43,
+                0.63
+              ],
+              "ip_adapter_scale": [
+                0.53,
+                0.83
+              ],
+              "cfg": [
+                6.6,
+                9.0
+              ],
+              "custom_lora_scale": [
+                0.6,
+                1.0
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 20,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.53,
+              "ip_adapter_scale": 0.68,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.8,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.39,
+                0.67
+              ],
+              "ip_adapter_scale": [
+                0.5,
+                0.86
+              ],
+              "cfg": [
+                6.3,
+                9.3
+              ],
+              "custom_lora_scale": [
+                0.55,
+                1.05
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 25,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.65,
+              "ip_adapter_scale": 0.52,
+              "cfg": 9.0,
+              "custom_lora_scale": 1.0,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.51,
+                0.79
+              ],
+              "ip_adapter_scale": [
+                0.34,
+                0.7
+              ],
+              "cfg": [
+                7.5,
+                10.5
+              ],
+              "custom_lora_scale": [
+                0.75,
+                1.25
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 33,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.75,
+              "ip_adapter_scale": 0.38,
+              "cfg": 10.2,
+              "custom_lora_scale": 1.2,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.57,
+                0.85
+              ],
+              "ip_adapter_scale": [
+                0.2,
+                0.6
+              ],
+              "cfg": [
+                8.2,
+                12.0
+              ],
+              "custom_lora_scale": [
+                0.9,
+                1.5
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "35_39": {
+        "source_age_min": 35,
+        "source_age_max": 39,
+        "source_anchor_age": 37,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -15,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.75,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.52,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.6,
+                0.9
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.32,
+                0.72
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 15,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.53,
+              "ip_adapter_scale": 0.68,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.8,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.43,
+                0.63
+              ],
+              "ip_adapter_scale": [
+                0.53,
+                0.83
+              ],
+              "cfg": [
+                6.6,
+                9.0
+              ],
+              "custom_lora_scale": [
+                0.6,
+                1.0
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 20,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.53,
+              "ip_adapter_scale": 0.68,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.8,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.39,
+                0.67
+              ],
+              "ip_adapter_scale": [
+                0.5,
+                0.86
+              ],
+              "cfg": [
+                6.3,
+                9.3
+              ],
+              "custom_lora_scale": [
+                0.55,
+                1.05
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 28,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.65,
+              "ip_adapter_scale": 0.52,
+              "cfg": 9.0,
+              "custom_lora_scale": 1.0,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.51,
+                0.79
+              ],
+              "ip_adapter_scale": [
+                0.34,
+                0.7
+              ],
+              "cfg": [
+                7.5,
+                10.5
+              ],
+              "custom_lora_scale": [
+                0.75,
+                1.25
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "40_44": {
+        "source_age_min": 40,
+        "source_age_max": 44,
+        "source_anchor_age": 42,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -20,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.75,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.52,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.32,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.57,
+                0.93
+              ],
+              "cfg": [
+                5.5,
+                8.5
+              ],
+              "custom_lora_scale": [
+                0.27,
+                0.77
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -15,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.75,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.52,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.6,
+                0.9
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.32,
+                0.72
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 15,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.53,
+              "ip_adapter_scale": 0.68,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.8,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.43,
+                0.63
+              ],
+              "ip_adapter_scale": [
+                0.53,
+                0.83
+              ],
+              "cfg": [
+                6.6,
+                9.0
+              ],
+              "custom_lora_scale": [
+                0.6,
+                1.0
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 23,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.65,
+              "ip_adapter_scale": 0.52,
+              "cfg": 9.0,
+              "custom_lora_scale": 1.0,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.51,
+                0.79
+              ],
+              "ip_adapter_scale": [
+                0.34,
+                0.7
+              ],
+              "cfg": [
+                7.5,
+                10.5
+              ],
+              "custom_lora_scale": [
+                0.75,
+                1.25
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "45_49": {
+        "source_age_min": 45,
+        "source_age_max": 49,
+        "source_anchor_age": 47,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -25,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.61,
+              "cfg": 7.4,
+              "custom_lora_scale": 0.62,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.43,
+                0.79
+              ],
+              "cfg": [
+                5.9,
+                8.9
+              ],
+              "custom_lora_scale": [
+                0.37,
+                0.87
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -20,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.75,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.52,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.32,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.57,
+                0.93
+              ],
+              "cfg": [
+                5.5,
+                8.5
+              ],
+              "custom_lora_scale": [
+                0.27,
+                0.77
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -15,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.75,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.52,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.6,
+                0.9
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.32,
+                0.72
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 10,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 18,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.53,
+              "ip_adapter_scale": 0.68,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.8,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.39,
+                0.67
+              ],
+              "ip_adapter_scale": [
+                0.5,
+                0.86
+              ],
+              "cfg": [
+                6.3,
+                9.3
+              ],
+              "custom_lora_scale": [
+                0.55,
+                1.05
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "50_54": {
+        "source_age_min": 50,
+        "source_age_max": 54,
+        "source_anchor_age": 52,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -30,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.61,
+              "cfg": 7.4,
+              "custom_lora_scale": 0.62,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.43,
+                0.79
+              ],
+              "cfg": [
+                5.9,
+                8.9
+              ],
+              "custom_lora_scale": [
+                0.37,
+                0.87
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -25,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.61,
+              "cfg": 7.4,
+              "custom_lora_scale": 0.62,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.43,
+                0.79
+              ],
+              "cfg": [
+                5.9,
+                8.9
+              ],
+              "custom_lora_scale": [
+                0.37,
+                0.87
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -20,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.75,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.52,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.32,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.57,
+                0.93
+              ],
+              "cfg": [
+                5.5,
+                8.5
+              ],
+              "custom_lora_scale": [
+                0.27,
+                0.77
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": -15,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.75,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.52,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.6,
+                0.9
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.32,
+                0.72
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 5,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 13,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.53,
+              "ip_adapter_scale": 0.68,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.8,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.43,
+                0.63
+              ],
+              "ip_adapter_scale": [
+                0.53,
+                0.83
+              ],
+              "cfg": [
+                6.6,
+                9.0
+              ],
+              "custom_lora_scale": [
+                0.6,
+                1.0
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "55_59": {
+        "source_age_min": 55,
+        "source_age_max": 59,
+        "source_anchor_age": 57,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -35,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.6,
+              "ip_adapter_scale": 0.51,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.72,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.42,
+                0.78
+              ],
+              "ip_adapter_scale": [
+                0.29,
+                0.73
+              ],
+              "cfg": [
+                5.8,
+                9.8
+              ],
+              "custom_lora_scale": [
+                0.42,
+                1.02
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -30,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.61,
+              "cfg": 7.4,
+              "custom_lora_scale": 0.62,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.43,
+                0.79
+              ],
+              "cfg": [
+                5.9,
+                8.9
+              ],
+              "custom_lora_scale": [
+                0.37,
+                0.87
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -25,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.61,
+              "cfg": 7.4,
+              "custom_lora_scale": 0.62,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.43,
+                0.79
+              ],
+              "cfg": [
+                5.9,
+                8.9
+              ],
+              "custom_lora_scale": [
+                0.37,
+                0.87
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": -20,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.75,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.52,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.32,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.57,
+                0.93
+              ],
+              "cfg": [
+                5.5,
+                8.5
+              ],
+              "custom_lora_scale": [
+                0.27,
+                0.77
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": -15,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.75,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.52,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.6,
+                0.9
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.32,
+                0.72
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": -10,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": -5,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 8,
+            "direction": "aging",
+            "recommended": {
+              "strength": 0.39,
+              "ip_adapter_scale": 0.82,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.6,
+              "steps": 20,
+              "prompt_weight": "strong_aging_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.29,
+                0.49
+              ],
+              "ip_adapter_scale": [
+                0.67,
+                0.97
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.4,
+                0.8
+              ]
+            },
+            "notes": [
+              "young sources often resist aging; lower IP and increase strength/LoRA/CFG",
+              "female aging: add a small push; model may keep smooth/youthful skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      },
+      "60_": {
+        "source_age_min": 60,
+        "source_age_max": null,
+        "source_anchor_age": 65,
+        "targets": {
+          "20_24": {
+            "target_anchor_age": 22,
+            "target_age_delta": -43,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.6,
+              "ip_adapter_scale": 0.51,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.72,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.42,
+                0.78
+              ],
+              "ip_adapter_scale": [
+                0.29,
+                0.73
+              ],
+              "cfg": [
+                5.8,
+                9.8
+              ],
+              "custom_lora_scale": [
+                0.42,
+                1.02
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "25_29": {
+            "target_anchor_age": 27,
+            "target_age_delta": -38,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.6,
+              "ip_adapter_scale": 0.51,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.72,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.42,
+                0.78
+              ],
+              "ip_adapter_scale": [
+                0.29,
+                0.73
+              ],
+              "cfg": [
+                5.8,
+                9.8
+              ],
+              "custom_lora_scale": [
+                0.42,
+                1.02
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "30_34": {
+            "target_anchor_age": 32,
+            "target_age_delta": -33,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.6,
+              "ip_adapter_scale": 0.51,
+              "cfg": 7.8,
+              "custom_lora_scale": 0.72,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.42,
+                0.78
+              ],
+              "ip_adapter_scale": [
+                0.29,
+                0.73
+              ],
+              "cfg": [
+                5.8,
+                9.8
+              ],
+              "custom_lora_scale": [
+                0.42,
+                1.02
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "35_39": {
+            "target_anchor_age": 37,
+            "target_age_delta": -28,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.61,
+              "cfg": 7.4,
+              "custom_lora_scale": 0.62,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.43,
+                0.79
+              ],
+              "cfg": [
+                5.9,
+                8.9
+              ],
+              "custom_lora_scale": [
+                0.37,
+                0.87
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "40_44": {
+            "target_anchor_age": 42,
+            "target_age_delta": -23,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.54,
+              "ip_adapter_scale": 0.61,
+              "cfg": 7.4,
+              "custom_lora_scale": 0.62,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.4,
+                0.68
+              ],
+              "ip_adapter_scale": [
+                0.43,
+                0.79
+              ],
+              "cfg": [
+                5.9,
+                8.9
+              ],
+              "custom_lora_scale": [
+                0.37,
+                0.87
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "45_49": {
+            "target_anchor_age": 47,
+            "target_age_delta": -18,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.75,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.52,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.32,
+                0.6
+              ],
+              "ip_adapter_scale": [
+                0.57,
+                0.93
+              ],
+              "cfg": [
+                5.5,
+                8.5
+              ],
+              "custom_lora_scale": [
+                0.27,
+                0.77
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "50_54": {
+            "target_anchor_age": 52,
+            "target_age_delta": -13,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.46,
+              "ip_adapter_scale": 0.75,
+              "cfg": 7.0,
+              "custom_lora_scale": 0.52,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.36,
+                0.56
+              ],
+              "ip_adapter_scale": [
+                0.6,
+                0.9
+              ],
+              "cfg": [
+                5.8,
+                8.2
+              ],
+              "custom_lora_scale": [
+                0.32,
+                0.72
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "55_59": {
+            "target_anchor_age": 57,
+            "target_age_delta": -8,
+            "direction": "rejuvenation",
+            "recommended": {
+              "strength": 0.34,
+              "ip_adapter_scale": 0.89,
+              "cfg": 6.5,
+              "custom_lora_scale": 0.42,
+              "steps": 20,
+              "prompt_weight": "strong_rejuvenation_prompt"
+            },
+            "tuning_range": {
+              "strength": [
+                0.24,
+                0.44
+              ],
+              "ip_adapter_scale": [
+                0.74,
+                1.04
+              ],
+              "cfg": [
+                5.3,
+                7.7
+              ],
+              "custom_lora_scale": [
+                0.22,
+                0.62
+              ]
+            },
+            "notes": [
+              "older-to-younger generally worked visually; keep IP moderate and remove age markers via negative prompt",
+              "female rejuvenation: preserve identity and avoid plastic skin",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          },
+          "60_": {
+            "target_anchor_age": 65,
+            "target_age_delta": 0,
+            "direction": "same_age",
+            "recommended": {
+              "strength": 0.22,
+              "ip_adapter_scale": 0.92,
+              "cfg": 6.0,
+              "custom_lora_scale": 0.35,
+              "steps": 20,
+              "prompt_weight": "neutral_identity_preserving"
+            },
+            "tuning_range": {
+              "strength": [
+                0.15,
+                0.3
+              ],
+              "ip_adapter_scale": [
+                0.8,
+                1.04
+              ],
+              "cfg": [
+                5.0,
+                7.0
+              ],
+              "custom_lora_scale": [
+                0.2,
+                0.5
+              ]
+            },
+            "notes": [
+              "identity-preserving refresh; avoid strong age change",
+              "",
+              "keep scheduler/model fixed when comparing coefficients"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "fixed_values": {
+    "steps": 20
+  },
+  "schema_note": "coefficients[gender][source_group].targets[target_group].target_age_delta = target_anchor_age - source_anchor_age. Negative means rejuvenation, positive means aging."
+}

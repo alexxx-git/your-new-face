@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "comment": "defaults применяются всегда; transitions — по порядку, первое совпадение по target_age, gender и (если задан source_age) по окну исходного возраста.",
+  "defaults": {
+    "strength": 0.5,
+    "cfg": 7.0,
+    "ip_adapter_scale": 0.9,
+    "custom_lora_scale": 0.5,
+    "age_slider_scale": 10.0,
+    "steps": 15
+  },
+  "transitions": [
+    {
+      "id": "young_to_elderly_male",
+      "comment": "Пример: если знаем исходный возраст 18–35 и цель 60+, чуть сильнее IP и LoRA",
+      "source_age_min": 18,
+      "source_age_max": 35,
+      "target_age_min": 60,
+      "target_age_max": 120,
+      "genders": ["male", "any"],
+      "overrides": {
+        "ip_adapter_scale": 0.95,
+        "custom_lora_scale": 0.55,
+        "strength": 0.32
+      }
+    },
+    {
+      "id": "strong_rejuvenate_female",
+      "source_age_min": 55,
+      "source_age_max": 90,
+      "target_age_min": 18,
+      "target_age_max": 35,
+      "genders": ["female", "any"],
+      "overrides": {
+        "strength": 0.28,
+        "ip_adapter_scale": 0.92
+      }
+    },
+    {
+      "id": "large_age_jump_any",
+      "comment": "Сильный сдвиг по модулю без известного source — только по цели (широкие окна не задаём source_*)",
+      "target_age_min": 70,
+      "target_age_max": 120,
+      "genders": ["any"],
+      "overrides": {
+        "strength": 0.5
+      }
+    }
+  ]
+}

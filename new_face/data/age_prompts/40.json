@@ -1,0 +1,5 @@
+{
+  "age": 40,
+  "positive": "portrait photo of adult {gender}, age {age}, youthful face, smooth skin",
+  "negative": "old, elderly, wrinkles, aged face, gray hair, sagging skin, lowres, blurry, deformed, disfigured, bad anatomy, watermark, jpeg artifacts, plastic skin, cartoon, 3d render"
+}

@@ -1,7 +1,7 @@
 import asyncio
 import tempfile
-from pathlib import Path
 from time import perf_counter
+from pathlib import Path
 
 from api.celery_app import app
 from api.db import async_session
@@ -25,20 +25,12 @@ def test_task(data):
 
 
 @app.task
-def process_face(task_id: str | dict | None = None, **kwargs):
-    if isinstance(task_id, dict) or kwargs.get("image_path"):
-        payload = dict(task_id) if isinstance(task_id, dict) else {}
-        payload.update(kwargs)
-        from new_face.svdmix_age_task import run_svdmix_age_transform
-
-        return run_svdmix_age_transform(**payload)
-    if task_id is None:
-        raise ValueError("task_id or image_path payload is required")
-    return asyncio.run(process_face_async(str(task_id)))
+def process_face(task_id: str):
+    return asyncio.run(process_face_async(task_id))
 
 
 async def process_face_async(task_id: str):
-    print(f"Processing SVDMix task: {task_id}")
+    print(f"Processing task: {task_id}")
 
     try:
         async with async_session() as session:
@@ -55,27 +47,27 @@ async def process_face_async(task_id: str):
         source_path = Path(source_object)
         with tempfile.TemporaryDirectory(prefix=f"ynf-{task_id}-") as tmp_dir:
             tmp_path = Path(tmp_dir)
-            suffix = source_path.suffix or ".jpg"
-            input_path = tmp_path / f"input{suffix}"
-            output_path = tmp_path / f"output{suffix}"
+            input_path = tmp_path / f"input{source_path.suffix}"
+            output_path = tmp_path / f"output{source_path.suffix}"
             input_path.write_bytes(source_bytes)
 
-            from new_face.svdmix_age_task import run_svdmix_age_transform
+            from new_face.test_single_pass import run_single_pass
 
             inference_started_at = perf_counter()
-            generation = run_svdmix_age_transform(
-                image_path=str(input_path),
+            generation = run_single_pass(
+                input_path=str(input_path),
                 output_path=str(output_path),
                 target_age=int(target_age or 40),
+                task_id=task_id,
             )
             inference_seconds = perf_counter() - inference_started_at
 
             result_bytes = output_path.read_bytes()
-            result_object = f"outputs/{source_path.stem}-svdmix-{task_id}{suffix}"
+            result_object = f"outputs/{source_path.stem}-generated{source_path.suffix}"
             upload_bytes(result_object, result_bytes, content_type)
 
             metrics = generation.get("metrics") or {}
-            source_age = _safe_int(generation.get("source_age"))
+            source_age = _safe_int(generation.get("source_age_used"))
             result_age = _safe_int(metrics.get("predicted_age"))
             async with async_session() as session:
                 await create_generation_metric(
@@ -91,17 +83,8 @@ async def process_face_async(task_id: str):
                         "metrics": metrics,
                         "prompt": generation.get("prompt"),
                         "negative_prompt": generation.get("negative_prompt"),
-                        "metadata_path": generation.get("metadata_path"),
-                        "selected_parameter_source": generation.get("selected_parameter_source"),
-                        "source_group": generation.get("source_group"),
-                        "target_group": generation.get("target_group"),
-                        "alpha_young": generation.get("alpha_young"),
-                        "lora_scale": generation.get("lora_scale"),
-                        "strength": generation.get("strength"),
-                        "ip_adapter_scale": generation.get("ip_adapter_scale"),
-                        "cfg": generation.get("cfg"),
-                        "steps": generation.get("steps"),
-                        "seed": generation.get("seed"),
+                        "run": generation.get("run"),
+                        "source_age_meta": generation.get("source_age_meta"),
                         "inference_seconds": inference_seconds,
                     }),
                 )
